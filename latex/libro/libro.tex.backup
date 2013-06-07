@@ -94,9 +94,7 @@
 % \includeonly{caracteristicas_sistema}
 
 
-\newsavebox{\mygraphic}
-\sbox{\mygraphic}{\includegraphics[keepaspectratio,
-height=0.1\textheight, width=0.1\textwidth]{imagenes/escudo.png}}
+
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[L]{\setlength{\unitlength}{1in}
