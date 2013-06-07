@@ -1,0 +1,167 @@
+\documentclass[12pt,oneside,spanish]{book}
+\usepackage[utf8]{inputenc}
+
+\usepackage[usenames]{color}
+\definecolor{MyDarkBlue}{rgb}{0,0.4,0.65}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=MyDarkBlue]{hyperref}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{times}
+\usepackage{longtable}
+\usepackage[hang,small]{caption}
+\usepackage{colortbl}
+\usepackage{multirow}
+
+% Márgenes y cabecera
+\usepackage[letterpaper,left=3cm,right=2cm,top=3cm,bottom=2cm,includeheadfoot]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\makeatletter
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{\@chapapp}\ \thechapter:\ #1}{}}
+\makeatother
+
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands
+\usepackage{amssymb} %Some extra symbols
+\usepackage{graphicx} %Paquete para incluir imágenes
+
+\usepackage[activeacute,spanish]{babel}
+
+\usepackage{apacite}
+\usepackage{natbib}
+\bibliographystyle{apacite}
+
+\newcommand{\titulo}{DISEÑO E IMPLEMENTACIÓN DE UN SISTEMA DE MANEJO DEL APRENDIZAJE A DISTANCIA: ÓSMOSIS 2}
+\newcommand{\autores}{ANA GABRIELA DÍAZ \\ JOSÉ LORENZO RODRÍGUEZ \\ JOAQUÍN WINDMÜLLER \\}
+\newcommand{\juradouno}{Prof. Adelaide Bianchini}
+\newcommand{\juradodos}{Prof. Elías Tahhan}
+\newcommand{\tutor}{Prof. Fidel Gil}
+
+\hbadness 10000
+\setlength{\headheight}{15.5pt}
+
+\hyphenation{movimiento}
+\hyphenation{accesi-ble}
+\hyphenation{des-habilitadas}
+\hyphenation{CakePHP}
+
+%Para resaltar código en php
+\usepackage{listings}
+
+\definecolor{light-gray}{gray}{0.97}
+\definecolor{keyword}{rgb}{0.47, 0.53, 0.6}
+\definecolor{string}{rgb}{0.73, 0.53, 0.27}
+\definecolor{comment}{rgb}{0.6, 0.6, 0.53}
+
+\lstset{
+  columns=fixed,
+  basicstyle=\footnotesize\ttfamily,
+  identifierstyle=\color{black},
+  keywordstyle=\color{keyword},
+  stringstyle=\color{string},
+  commentstyle=\color{comment}\itshape,
+  backgroundcolor=\color{light-gray},
+  frame=single,
+  framerule=0pt,
+  breaklines,
+  showstringspaces=false,
+  tabsize=4
+}
+
+\lstdefinelanguage{PHP}
+  {morekeywords={
+    % Case-sensitive keywords:
+    abstract,and,as,break,case,catch,class,const,continue,default,die,do,echo,
+    else,elseif,endfor,endforeach,endswitch,endwhile,extends,for,global,final,
+    foreach,function,if,implements,import,include,include_once,instanceof,
+    interface,list,namespace,new,or,print,private,protected,public,require,
+    require_once,return,static,switch,throw,try,var,while,xor,Configure,
+    % Case-insensitive keywords:
+    true,True,TRUE,false,False,FALSE,null,Null,NULL},
+   morekeywords=[2]{
+     array,bool,boolean,double,float,int,integer,object,real,string,unset},
+   otherkeywords={-,.,~,^,@,;,:,\%,|,=,+,!,?,&,<,>},
+   sensitive=true,
+   morecomment=[l]{//},      % C++ line comment
+   morecomment=[l]{\#},      % Bash line comment
+   morecomment=[s]{/*}{*/},  % C block comment
+   morestring=[b]{'},        % single-quoted string
+   morestring=[b]{"}         % double-quoted string
+  }
+
+% \includeonly{caracteristicas_sistema}
+
+\begin{document}
+
+\include{portada}
+\newpage
+
+\pagestyle{empty}
+\include{evaluadores}
+\newpage
+
+\include{resumen}
+
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+\newpage
+% libro
+\pagenumbering{arabic}
+
+\pagestyle{plain}
+\include{introduccion}
+
+\pagestyle{fancy}
+\include{planteamiento}
+
+\pagebreak
+
+% -- Educación en línea --
+	\include{marco_teorico/educacion_en_linea}
+	\include{marco_teorico/corrientes_pedagogicas}
+	\include{marco_teorico/learning_objects}
+% -- Web 2.0 -- 
+	\include{marco_teorico/web2}
+	\include{marco_teorico/accesibilidad}
+% -- Metodología -- 
+	\include{marco_teorico/metodologia}
+% -- MVC --
+	\include{marco_teorico/mvc}
+
+% -- Metáfora del sistema --
+	\include{diseno/metafora_roles}
+	\include{diseno/historias_usuario}
+	\include{diseno/req_no_funcionales}
+
+% -- Marco Tecnológico --
+	\include{marco_tecnologico/entorno}
+
+%-- Implementación --	
+	\include{implementacion}
+	
+% -- Conclusiones y recomendaciones --
+	\include{conclusiones}
+
+% -- apendices
+	\appendix
+	\include{apendices/usuarios}
+	\include{apendices/caracteristicas_sistema}
+	% -- Información Complementaria --
+	\include{apendices/informacion_complementaria}
+		\include{apendices/accesibilidad}
+	\include{apendices/comparativa}
+
+
+%Manual del programador
+	\include{apendices/manual_prog}
+
+% referencias
+\bibliography{refs}
+
+\end{document}

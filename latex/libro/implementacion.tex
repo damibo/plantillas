@@ -1,0 +1,171 @@
+%!TEX root = Libro.tex
+\chapter{Implementación}
+
+\section{Arquitectura de plugins}
+Las características funcionales que ofrece Ósmosis son casi en su totalidad proveídas por los plugins, que son aplicaciones separadas que comparten el entorno de ejecución de la plataforma, y que pueden intervenir o participar en cualquier lugar de la misma. Para referirnos a los plugins también utilizaremos el término \emph{herramientas}, siendo este último término específico a los plugins que extienden la funcionalidad de los cursos.\\
+
+Esta modularidad permite el desarrollo rápido de nuevas características para la plataforma y mitiga el riesgo de dañar funcionalidades existentes debido a la modificación del código principal. Así también posibilita que los docentes elijan las herramientas que mejor se adecuen a su metodología educacional, en lugar de estas ser impuestas globalmente por un administrador.\\
+
+La arquitectura de plugins de Ósmosis está basada en la ofrecida por CakePHP. En este sentido, un plugin de Ósmosis es, prácticamente, una aplicación CakePHP \citep{CakePHP_Plugins_2008}, que presenta nativamente los siguientes atributos:
+
+\begin{enumerate}
+	\item \textbf{Configuraciones compartidas} \\
+	La configuración de conexiones a fuentes de datos, lógica de control de acceso, lógica del modelo de datos y clases utilitarias son automáticamente heredadas de la aplicación principal, aunque pueden ser redefinidas o extendidas por el propio plugin.
+	\item \textbf{Intercomunicación entre plugins} \\
+	Cualquier plugin puede comunicarse con el modelo de datos o invocar acciones de algún otro plugin. En este sentido es posible replicar la idea de la arquitectura modular de los plugins para uno en particular.
+\end{enumerate}
+
+Sin embargo, Ósmosis extiende las capacidades naturales de un plugin del framework que utiliza para permitirles:
+
+\begin{enumerate}
+	\item \textbf{Incrustar elementos en la interfaz} \\
+	Esto permite que cada plugin pueda suscribirse a lugares de emplazamiento anunciados, ya sea por las vistas principales de Ósmosis o por las de cualquier otro de estos módulos, de tal manera que pueda participar en la presentación de información. Una de las maneras en que el sistema aprovecha esta capacidad es, por ejemplo, mostrar un resumen de los eventos sucedidos en un curso. Con esta capacidad es posible, también, que los plugins agreguen secciones fijas en el diseño, por ejemplo la lista de contactos del chat.
+	\item \textbf{Engancharse a sucesos} \\
+	Esto permite que los plugins puedan detectar la ocurrencia de un evento o un cambio de estado en el modelo de datos, como el registro de un nuevo usuario, de modo que puedan realizar acciones adicionales.
+	\item \textbf{Definir reglas de acceso propias} \\
+	Cada plugin puede al momento de su instalación definir sus propias reglas de acceso basadas en los grupos a los que pertenecen los usuarios de la aplicación. De esta manera no se necesita que la autorización sea manejada a nivel del plugin, sino que la lógica se comparte para todos en la aplicación principal.
+	\item \textbf{Crear auto-instaladores} \\
+	Lo cual posibilita que cualquier plugin defina las acciones adicionales que requiere para ponerse en funcionamiento, por ejemplo, cargar las tablas que necesita en la base de datos.
+\end{enumerate}
+
+Además el núcleo de Ósmosis se encarga de verificar que el plugin que se esté tratando de acceder, o bien, que aquel que desee participar de un evento, esté debidamente activado, no sólo globalmente para la aplicación, sino específicamente para cada curso. Esto hace posible remover características de la plataforma durante su ejecución a distintos niveles y que se puedan fácilmente volver a activar.
+
+\subsection{Instalación y activación}
+Un aspecto interesante de la arquitectura de plugins de Ósmosis es que permite su administración de manera sencilla. Los pasos generales para instalar un plugin son: 
+
+\begin{enumerate}
+	\item Descomprimir el plugin
+	\item Colocar la carpeta descomprimida en el directorio plugins de Ósmosis.
+	\item Activar el plugin en la interfaz administrativa.
+\end{enumerate}
+
+Adicionalmente, los profesores tienen la potestad de activar o desactivar las herramientas en sus cursos sin afectar a los demás.\\
+
+\subsection {Plugins Implementados}
+
+\subsubsection{Agenda}
+La agenda es una herramienta que sirve para planificar y anunciar los eventos que un curso pudiera tener. Se implementó la agenda de tal manera que pudieran etiquetarse lo eventos de que se listen en la misma, y así poder rastrear los mismos a través de búsquedas en un futuro.\\
+
+La agenda muestra una vista principal estilo calendario del mes en curso, en cada casilla correspondiente al día, se muestran extractos de texto referentes a los eventos registrados para el mismo.\\
+
+Para interactuar con la agenda basta seleccionar los enlaces correspondientes a cada evento para ver los detalles como una descripción ampliada, horario y etiquetas que han sido asignadas por los usuarios. Adicionalmente se puede avanzar o retrasar las vistas de calendario en el tiempo, de modo que es posible conocer con antelación qué está planificado para el curso.
+
+
+\subsubsection{Blog}
+Da la capacidad, a cada uno de los usuarios, de mantener un diario académico con sus ideas, pensamientos y actividades que realiza con respecto, pero no limitado, a los temas de los cursos en los que participa.\\
+
+El blog permite también que los demás usuarios dejen comentarios en las entradas, de este modo, se habilita una vía adicional por la cual los estudiantes pueden exponer ideas, intercambiar conocimientos y corregir errores.
+
+\subsubsection{Chat}
+El plugin Chat fue implementado de manera que no fuese dependiente del curso que el usuario está manejando. En lugar de ser una sala de conversación donde profesores y alumnos intercambian mensajes que todos pueden leer, se desarrolló una implementación típica de mensajería instantánea, en la cual la conversación se limita a dos interlocutores.\\
+
+A pesar de que lo que se conoce como salas de chat pudiera ser más efectivo a la hora de comunicar una misma idea a todos los participantes de la conversación, se prefirió implementar un canal de conversación omnipresente en la plataforma, de forma tal que los interlocutores no tuviesen que coincidir en la misma herramienta para efectuar el intercambio de ideas; sino que, por el contrario, fuese posible ubicar a la persona con la cual se quiere conversar, sin importar qué sección del sistema esté usando.\\
+
+De igual manera, se implementaron herramientas que se describirán en breve y que cumplen  la misma función de una sala de conversación, en el sentido de poder comunicar a todas las personas de un mismo curso una única idea que sea leída por todos; no obstante las herramientas que suplen dicha falta son de carácter asíncrono, y la espera para recibir una respuesta a una idea emitida puede ser un poco más larga.\\
+
+Para la implementación de este plugin, se recurrió al uso de javascript, comunicación con el servidor a través de peticiones REST \citep{Fielding2000}, y respuestas en formato XML. A continuación se detalla el ciclo de vida de una instancia de este plugin:
+
+\begin{itemize}
+	\item El usuario ingresa a la plataforma y es instanciado  el chat, con lo cual se manda una petición al servidor solicitando una marca de tiempo que será usada para pedir los mensajes que estén esperando por ser recibidos.
+	\item El cliente de chat envía una petición solicitando la lista de contactos disponibles.
+	\item La instancia de chat solicita al servidor los mensajes enviados al usuario desde la marca de tiempo recibida.
+	\item El servidor responde con un paquete XML conteniendo los posibles mensajes que faltan por recibir. En caso de haber mensajes, manda una nueva marca de tiempo, sino envía la marca de tiempo anterior.
+	\item El cliente de chat despacha los mensajes a los contenedores XHTML que albergan la conversación en curso, o crea nuevos contenedores si se trata de una nueva conversación.
+	\item La instancia de chat pregunta periódicamente al servidor por nuevos mensajes enviando la última marca de tiempo recibida.
+\end{itemize}
+
+Es de hacer notar que esta implementación usa la técnica de Encuestamiento (Polling), que puede hacer un consumo innecesario de la red. No obstante, se diseñaron los mensajes XML, de tal manera que se enviara lo estrictamente necesario para que el plugin funcione.\\
+
+En su estado actual, el plugin de chat puede ser extendido con poco esfuerzo para albergar conversaciones grupales, o hacer salas de chat completas.
+
+\subsubsection{Foro}
+Esta herramienta representa un espacio para la discusión de los temas relacionados con el curso. El funcionamiento del foro es bastante sencillo:
+
+\begin{enumerate}
+	\item El profesor define los temas sobre los cuales se puede discutir.
+	\item Cualquier miembro del curso puede iniciar una discusión dentro de los límites de dichos temas.
+	\item Cualquier miembro del curso pueden dejar su respuesta a las discusiones existentes.
+\end{enumerate}
+
+Adicional a este funcionamiento básico, es posible modificar respuestas y cerrar discusiones o temas completos.
+
+\subsubsection{Casillero}
+Esta herramienta permite a cada miembro contar con un espacio para almacenar archivos. Este es un cambio sustancial con respeto a la implementación de Ósmosis 1.5 en la que era el curso el que contaba con ese espacio. Esto responde a dos aspectos importantes:
+\begin{enumerate}
+	\item \textbf{Mantener la consonancia con la metáfora seleccionada}\\
+	Son los profesores y alumnos quienes tienen casillero, no los cursos.
+	\item \textbf{Aumentar el nivel de apertura en la información}\\
+	Se deja en manos de la mayoría, los estudiantes, la generación de contenidos.
+\end{enumerate}
+
+Metafóricamente, el casillero representa el mismo objeto en la vida real con algunos detalles:
+\begin{itemize}
+	\item \textbf{Los archivos pueden ser organizados en carpetas}\\
+	Aunque en un casillero no suelen haber carpetas como en un archivador, se ha seleccionado dicha metáfora (evitando la palabra directorio que no dice nada) como escape para la necesidad de organizar los archivos.
+	\item \textbf{Los archivos disponibles en el casillero son de acceso público} \\
+	Permite controlar el uso indebido de la herramienta y reforzar la generación de información
+	\item \textbf{Una carpeta especial funge como buzón de entregas (Drop-box)}\\
+	El buzón permite la entrega de material que debe mantenerse secreto, por ejemplo para evitar plagios.
+\end{itemize}
+
+\subsubsection{Pruebas}
+Permite al profesor diseñar y aplicar pruebas en línea a los estudiantes del curso, los tipos de pregunta que maneja esta herramienta son:
+
+\begin{itemize}
+	\item Selección (simple y múltiple)
+	\item Apareamiento
+	\item Ordenamiento
+	\item Desarrollo (Texto)
+\end{itemize}
+
+La implementación de esta herramienta se basa en un subconjunto del estándar \emph{IMS Question \& Test Interoperability (QTI) v2.1} \citep{IMP_QTI2008}. Esta especificación presenta un modelo de datos para la representación de preguntas y de pruebas con sus correspondientes resultados.\\
+
+\emph{QTI} define como objeto de evaluación básico a los \emph{items} que contienen una pregunta, las instrucciones en cuánto a cómo debe ser presentada, el proceso de respuesta (cómo debe evaluarse las respuestas) y el feedback que debe darse (incluyendo pistas o soluciones). \\
+
+Hay muchos elementos de este estándar que han sido omitidos en beneficio de la simplicidad, sin embargo uno de los aspectos más interesantes de este estándar es la posibilidad de intercambio de pruebas completas, distribuidas a través de paquetes XML. De implementarse esta capacidad, Ósmosis podría ser considerado un repositorio abierto de pruebas en línea basadas en dicho estándar.\\
+
+Con respecto a la implementación, Ósmosis permite crear un repositorio de preguntas reutilizables por cualquier profesor para la creación de sus pruebas, además de una interfaz  diseñada para la confección rápida y visual de los mismos.
+
+\subsubsection{Lecciones}
+Esta herramienta habilita al profesor para entregar a los alumnos contenidos navegables en forma de lecciones interactivas.\\ 
+
+La implementación de esta herramienta también está basada en la definición de un estándar. En este caso se trata de \emph{Sharable Content Object Reference Model}, también denominado SCORM 2004. 3ra. Edición \citep{IMP_ADL2008}. El objetivo principal de SCORM es la creación de contenidos de aprendizaje reutilizables, bajo el modelo de ``objetos instruccionales''. Ósmosis tiene la capacidad de consumir paquetes SCORM y mostrarlos a los usuarios en forma de lecciones haciendo un seguimiento de aquellas secciones que ya han sido estudiadas por el usuario.\\
+
+El desarrollo de esta herramienta se basa en uno de los libros que definen el estándar, \emph{SCORM Content Aggregation Model (CAM)} \citep{SCORM_CAM}, en el cual se describen los componentes usados para la construcción de los objetos de aprendizaje, cómo empaquetarlos para que puedan ser compartidos entre sistemas, cómo se deben describir para facilitar la búsqueda y la reutilización y la secuencia de la información en dichos componentes, entre otros.\\
+
+Uno de las deficiencias más importantes en la implementación es que, una vez cargados los contenidos en formato SCORM no es posible descargarlos nuevamente, esto significa que la habilidad de compartir que genera SCORM no está disponible en Ósmosis.
+
+\subsubsection{Wiki}
+La herramienta Wiki permite la creación de páginas web de manera rápida, sencilla y colaborativa. Dado que las implementaciones comunes de sistemas de wiki existentes contemplan el seguimiento de cambios realizados a cada página creada, se procedió a hacer una investigación sobre la mejor manera de almacenar estos cambios.\\
+
+Con respecto a este tema, \citep{Starling2004}, considera que la manera más eficiente en cuanto espacio en disco y a rendimiento de los procesadores, es almacenar la copia completa de la versión anterior y generar una página página nueva que contenga los cambios deseados. Pero, dado que las revisiones a un articulo son vistas en menor frecuencia que las versiones actuales, es seguro guardar el texto comprimido con el algoritmo Gzip.\\
+
+Ósmosis, al igual que el software usado por la Wikipedia, almacena copias completas de las revisiones para cada página, a la vez que soporta visualizar las diferencias entre cualquier par de revisiones. De la misma manera se implementó la funcionalidad requerida para restaurar versiones anteriores de una página, en cuyo caso, se guardará la versión actual como una revisión, y será reemplazada por la versión seleccionada.\\
+
+El Wiki de Ósmosis fue implementado de manera que los usuarios no tuviesen que aprender ningún tipo de sintaxis especial para crear las páginas, de manera que se minimice la curva de aprendizaje para estos. En su lugar se utilizó un editor de texto enriquecido WYSIWYG (Lo que ves es lo que obtienes, por sus siglas en inglés), que emula aplicaciones de escritorio para la edición y creación de textos.
+
+\section{Autorización de usuarios}
+La autorización de usuarios en Ósmosis se implementó con un sistema híbrido, que permite agregar reglas a nivel de cada controlador de aplicación, y de usar un repositorio central de permisos representado con listas de control de acceso o \emph{ACL} por sus siglas en inglés \citep{ACLWikipedia}.\\
+
+La lista de control de acceso opera a nivel de los roles de usuario, de manera que funciona como un control de acceso basado en roles \citep{RBAC1996}, los cuales no son fijos para cada miembro de la plataforma, sino que cambian según la ubicación en la que estén trabajando. Por ejemplo un usuario podría ser un profesor en un curso, mientras que es un estudiante en otro, o bien no tener acceso al mismo en lo absoluto. Por otro lado, la autorización basada en los controladores permite un control mucho más fino de lo que cada usuario tiene permitido hacer, por ejemplo a este nivel se puede verificar si la persona que desea modificar un registro en particular es la dueña del mismo, por lo cual tiene privilegios especiales.\\
+
+El subsistema de autorización fue implementado de tal manera que fuese posible intercambiarlo por cualquier otro método de autorización que se desee en un futuro, pues simplemente se tiene que cambiar el objeto de autorización por algún otro que defina los métodos requeridos.
+
+\section{Seguimiento del usuario}
+Ósmosis provee un sistema sencillo para hacer seguimiento a las acciones de los usuarios. La implementación se encarga de registrar las creaciones y modificaciones de datos de los modelos que utilicen la interfaz \emph{Loggable}\\
+
+Registrar estos cambios en los datos le permite a Ósmosis:
+\begin{itemize}
+	\item Presentar a cada usuario los cambios ocurridos recientemente de modo que pueda mantenerse informado.
+	\item Permitir a los administradores hacer una aproximación de qué herramientas y secciones de la aplicación son de mayor uso.
+	\item Cumplir con la condición de no-repudio \citep{Calderon2007} de la seguridad de datos.
+\end{itemize}
+
+En su estado actual, Ósmosis no provee una herramienta para hacer cálculo de estadísticas complejas sobre los datos recabados, de modo que el segundo punto es una potencialidad que ha de ser implementada.
+
+Como se indicó, el seguimiento que hace Ósmosis es estrictamente sobre los cambios a los datos. Extender esta funcionalidad para hacer un seguimiento de cada solicitud es posible, sin embargo se consideró como excesivo e innecesario.
+
+\section{Internacionalización}
+Con la finalidad facilitar la implantación de la plataforma en múltiples lenguajes, se aprovecharon las capacidades del framework utilizado al transformar todas las cadenas de caracteres, visibles para los usuarios, mediante una función de traducción. Dicha función evalúa las preferencias locales de la máquina del usuario, zona desde donde solicita la página, preferencias de la aplicación y otros aspectos para elegir el idioma de traducción.\\
+
+El idioma predeterminado utilizado en la plataforma es el inglés, y las reglas de transformación para cada idioma deben definirse en archivos específicos que siguen las reglas de la librería GNU gettext y que consisten en la creación de pares clave-valor, para cada uno de los textos que se deseen traducir. Dichos archivos son luego compilados e interpretados por la librería antes referida para aumentar el rendimiento al momento de la traducción.

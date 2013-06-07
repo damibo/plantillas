@@ -1,0 +1,413 @@
+\documentclass{article}
+
+\renewcommand{\abstractname}{Resumen}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\pagestyle{fancy}
+\usepackage{palatino}
+
+
+% cabecera
+\lhead{
+	\footnotesize{
+		\textbf{GNU/Ósmosis 2.0} \\
+		\textbf{Documento de Visión}}
+}
+\chead{}
+\rhead{
+	\footnotesize{
+		\textbf{Versión:} \textnormal{$<$0.1$>$}\\
+		\textbf{Fecha:} \textnormal{$<$Agosto 21 de 2007$>$}}}
+\lfoot{}
+\rfoot{}
+\cfoot{\thepage}
+
+
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+
+%\usepackage{times}
+\makeindex
+\begin{document}
+
+% Article top matter
+\title{GNU/Ósmosis 2.0 \\ Visión}
+\author{Joaquín Windmuller \texttt{02-35564} \\
+		Universidad Simón Bolívar}
+\date{\today}  %\today is replaced with the current date
+\maketitle
+
+\begin{abstract}
+	Resumen
+\end{abstract}
+
+\pagebreak
+\tableofcontents
+\pagebreak
+
+\section{Introducción}
+	\subsection{Propósito}
+	El propósito de este documento es recolectar, analizar y definir las necesidades y requerimientos del Sistema GNU/Ósmosis 2.0. Se enfoca en las funcionalidades requeridas por los stakeholders y los usuarios finales, y las razones de su existencia. Los detalles de cómo el sistema satisface estos requerimientos se encuentran plasmados en los casos de uso y especificaciones que complementan este documento.
+
+	\subsection{Definiciones, Acrónimos y Abreviaciones}	
+		\begin{itemize}
+			\item \textbf{USB:} Universidad Simón Bolívar
+			\item \textbf{Sistema de Aulas Virtuales de la USB:} sistema de educación a distancia disponible en la USB desarrollado sobre el Sistema GNU/Ósmosis 1.5.
+		\end{itemize}
+	
+	\subsection{Alcance}
+	El alcance de este documento comprende el levantamiento inicial de las necesidades de los usuarios y stakeholders, así como las características y funcionalidades más resaltantes del Sistema GNU /Ósmosis 2.0.
+	
+\section{Posicionamiento}
+	
+	\subsection{Enunciado del Problema}
+	En la actualidad, el sistema GNU/Ósmosis 1.5, está basado en Dokeos (que a su vez está basado en Claroline) y presenta un código mal documentado, poco estructurado y de difícil mantenimiento. Adicionalmente, la comunidad de usuarios del sistema de Aulas Virtuales dentro de la Universidad Simón Bolívar ha solicitado nuevas funcionalidades, requerimientos que, poco a poco, han sido respondidos pero la complejidad del código ha dificultado y ralentizado el desarrollo de nuevas funcionalidades.
+	
+	\subsection{Oportunidad del Negocio}
+	A pesar de que en el mercado ya existen sistemas de gestion y manejo de la educación, muchos de los sistemas de fuente abierta disponibles no poseen una base de código bien estructurada que ofrezca una mejor mantenibilidad y facilidad para el desarrollo e incorporación de nuevas funcionalidades.
+
+\section{Stakeholders y Descripción de Usuarios}
+	\subsection{Resumen del Stakeholder}
+	En la tabla que se muestra a continuación, se ofrece un breve resumen de los stakeholders que participan en el desarrollo de este proyecto y su participación dentro del proyecto.
+
+	\begin{center}
+		\begin{tabular}{| p{0.15\textwidth} | p{0.45\textwidth} | p{0.4\textwidth} |}
+			\hline  % Print horizontal line
+			Nombre & Descripción & Responsabilidades \\ \hline
+% 			
+			DSM &
+			Moderador técnico. Es la unidad encargada de
+			dar apoyo, servicio y asesoría en el uso de recursos
+			multimedia para programas de docencia,
+			investigación y extensión de la USB. & 
+			\begin{itemize}
+				\item Garantizar el mantenimiento del sistema
+				\item Hacer seguimiento al desarrollo del sistema
+				\item Garantizar la disponibilidad de los recursos necesarios para el funcionamiento del sistema
+			\end{itemize}
+			\\ \hline
+% 			
+			\raggedright Fidel Gil, \linebreak Hermes Rodríguez &
+			Mentor y Asesor, respectivamente. Prestan asesoría en cuanto a la determinación de los requerimientos del sistema y de las características de su comportamiento. &
+			\begin{itemize}
+				\item Prestar asesoría en la determinación de los requerimientos y características del sistema.
+				\item Monitoreo del progreso del sistema
+			\end{itemize}
+			\\ \hline
+% 			
+			\raggedright
+			Ana Gabriela Díaz,
+				\linebreak
+			Joaquín Windmüller,
+				\linebreak
+			José Lorenzo Rodríguez, &
+			Desarrollador. Encargado del diseño e implementación del Sistema. &
+			\begin{itemize}
+				\item Desarrollo de la aplicación.
+				\item Aporte de ideas para mejorar la funcionalidad de la aplicación.
+			\end{itemize}
+			\\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsection{Resumen del Usuario}
+	En la tabla que se muestra a continuación, se ofrece un breve resumen de los usuarios que maneja el sistema.
+	
+	\begin{center}
+		\begin{tabular}{| p{0.20\textwidth} | p{0.4\textwidth} | p{0.4\textwidth} |}
+			\hline  % Print horizontal line			
+			\raggedright
+			Nombre & Descripción & Responsabilidades \\ \hline
+ 			Administrador &
+			Usuario del sistema que posee todos los permisos. &
+			\begin{itemize}
+			\item Realizar el mantenimiento del sistema
+			\item Incorporar nuevas funcionalidades al sistema, de ser necesario.
+			\item Mejorar las herramientas disponibles.
+			\end{itemize}
+			\\ \hline	
+
+			\raggedright
+ 			Profesor &
+			Persona con habilidades pedagógicas encargada de impartir la educación. Usuario principal o clave del sistema que tiene la posibilidad de usarlo como herramienta para impartir un curso. &
+			\begin{itemize}
+			\item Crear, actualizar, modificar o gestionar la información pedagógica que se quiera utilizar como ayuda de la metodología seleccionada para impartir el curso.
+			\item Hacer seguimiento de las actividades planificadas
+			\item Evaluar el desempeño del estudiante.
+			\end{itemize}
+			\\ \hline	
+
+			\raggedright
+ 			Facilitador &
+			Ayudante del profesor que contribuye con el proceso de enseñanza. &
+			\begin{itemize}
+			\item Se le atribuyen responsabilidades similares a las del profesor.
+			\end{itemize}
+			\\ \hline	
+
+			\raggedright
+ 			Estudiante &
+			Persona que cursa estudios. &
+			\begin{itemize}
+			\item Contribuir en el desarrollo de las actividades del curso.
+			\item Hacer uso de las herramientas del sistema propuestas para complementar el proceso de aprendizaje.
+			\item Evaluar o dar feedbacks del sistema y sus características.
+			\end{itemize}
+			\\ \hline		
+		
+		\end{tabular}
+	\end{center}
+
+	\subsection{Perfil del Stakeholder}
+	\subsubsection{Moderador tï¿½cnico}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & Aquellos que brindan asesoría, aportan ideas o encaminan el curso del proyecto \\ \hline
+		\textbf{Descripción} & El asesor determina los requerimientos del sistema o sus funcionalidades además de la tecnología a usar.\\ \hline
+		\textbf{Tipo} & Avanzado \\ \hline
+		\textbf{Responsabilidades} & Establecer los lineamientos técnicos sobre los cuales se desarrolla el sistema.\\ \hline
+		\textbf{Criterio de éxito} & Recibir un sistema que cumpla con las normas establecidas para el desarrollo del mismo. 
+		\\ \hline
+		\textbf{Actividades} & Establecer cuáles herramientas se pueden usar para el desarrollo de la aplicación. \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Asesor}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & Aquellos que brindan asesoría, aportan ideas o encaminan el curso del proyecto
+		\\ \hline
+		\textbf{Descripción} & El asesor determina los requerimientos del sistema o sus funcionalidades además de la tecnología a usar.\\ \hline
+		\textbf{Tipo} & Avanzado \\ \hline
+		\textbf{Responsabilidades} & Brinda asesoría en cuanto a los requerimientos que ha de tener el sistema así como la tecnología a usar.\\ \hline
+		\textbf{Criterio de éxito} & Recibir un sistema que cumpla con las normas establecidas para el desarrollo del mismo. 
+		\\ \hline
+		\textbf{Actividades} & En la revisión de requerimientos y el uso de la tecnología. \\ \hline
+		\textbf{Comentarios/Otros} & Problemas de comunicación entre el asesor y los desarrolladores del sistema. \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Mentor}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & Aquellos que vigilan el desarrollo del proyecto, en cuanto a prácticas metodológicas.
+		\\ \hline
+		\textbf{Descripción} & El mentor vigila el uso de las prácticas metodológicas para el desarrollo de software además del avance del proyecto en general.\\ \hline
+		\textbf{Tipo} & Avanzado \\ \hline
+		\textbf{Responsabilidades} & Brinda asesoría en el uso del RUP. Vigila el desarrollo del proyecto.\\ \hline
+		\textbf{Criterio de éxito} & Recibir un sistema que cumpla con las normas establecidas para el desarrollo del mismo. 
+		\\ \hline
+		\textbf{Actividades} & En la generación de requerimientos, y aporte de métodos, prácticas y experiencias en el desarrollo de software. \\ \hline
+		\textbf{Comentarios/Otros} & Problemas de comunicación entre el mentor y los desarrolladores del sistema. \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Desarrollador}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & Aquellos encargados del diseño y desarrollo de la aplicación.\\ \hline
+		\textbf{Descripción} & El desarrollador diseña e implementa la aplicación para ser usada. Interviene en el mejoramiento o aporte de requerimientos.\\ \hline
+		\textbf{Tipo} & Avanzado \\ \hline
+		\textbf{Responsabilidades} & Desarrolla la aplicación y aporta ideas creativas para su implementación o diseño.
+		\\ \hline
+		\textbf{Criterio de éxito} & Desarrollar y completar un sistema que cumpla con las normas establecidas para el desarrollo del mismo. 
+		\\ \hline
+		\textbf{Actividades} & En el desarrollo de la aplicación en general
+		\\ \hline
+		\textbf{Comentarios/Otros} & Dificultad en el aprendizaje del uso de las herramientas necesarias para desarrollar el sistema.
+		Tiempo limitado y dedicaciï¿½n no exclusiva al desarrollo de la aplicación. \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsection{Perfil del Usuario}
+
+	\subsubsection{Administrador}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & 
+		\\ \hline
+		\textbf{Descripción} & \\ \hline
+		\textbf{Tipo} &  \\ \hline
+		\textbf{Responsabilidades} & \\ \hline
+		\textbf{Criterio de éxito} & \\ \hline
+		\textbf{Actividades} &  \\ \hline
+		\textbf{Comentarios/Otros} &  \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Profesor}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & 
+		\\ \hline
+		\textbf{Descripción} & \\ \hline
+		\textbf{Tipo} &  \\ \hline
+		\textbf{Responsabilidades} & \\ \hline
+		\textbf{Criterio de éxito} & \\ \hline
+		\textbf{Actividades} & \\ \hline
+		\textbf{Comentarios/Otros} & \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Facilitador}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & 
+		\\ \hline
+		\textbf{Descripción} & \\ \hline
+		\textbf{Tipo} & \\ \hline
+		\textbf{Responsabilidades} & \\ \hline
+		\textbf{Criterio de éxito} & \\ \hline
+		\textbf{Actividades} & \\ \hline
+		\textbf{Comentarios/Otros} & \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsubsection{Estudiante}
+	\begin{center}
+		\begin{tabular}{| p{0.25\textwidth} | p{0.75\textwidth}|}
+		 \hline  % Print horizontal line			
+		\raggedright
+		\textbf{Representante} & \\ \hline
+		\textbf{Descripción} & \\ \hline
+		\textbf{Tipo} &  \\ \hline
+		\textbf{Responsabilidades} & \\ \hline
+		\textbf{Criterio de éxito} & \\ \hline
+		\textbf{Actividades} & \\ \hline
+		\textbf{Comentarios/Otros} & \\ \hline
+		\end{tabular}
+	\end{center}
+
+	\subsection{Necesidades de los Stakeholders o Usuarios}
+	\begin{center}
+		\begin{tabular}{| p{0.2\textwidth} | p{0.12\textwidth} | p{0.25\textwidth} | p{0.3\textwidth} | p{0.3\textwidth}|}
+		\hline  % Print horizontal line			
+			\raggedright
+			Necesidad & Prioridad & Personas \linebreak Relacionadas & Solución Actual & Soluciï¿½n \linebreak Propuesta \\ \hline
+			
+		
+		\end{tabular}
+	\end{center}
+	
+	\subsection{Alternativas y Competencia}
+	Actualmente existe una gran variedad de sistemas de gestiï¿½n de aprendizaje en el mercado, a continuación se listan algunos de ellos:
+	\begin{itemize}
+	\item Moodle 1.8
+	\item Dokeos 1.5.4
+	\item Sakai 2.3
+	\item Claroline 1.8.1
+	\item ATutor 1.5.4
+	\item Blackboard Learning System Vista 4.1 Enterprise License
+	\item Desire2Learn 8.2
+	\end{itemize}
+
+	Ver anexo Sistemas de Gestión de Aprendizaje para detalles de las características de cada sistema y comparación entre ellos 
+
+\section{Descripción del Sistema}
+
+\subsection{Perspectiva del Sistema}
+
+\subsection{Resumen de Capacidades}
+
+\subsection{Licencias e Instalación.}
+
+\section{Características del Sistema}
+
+Algunas de las herramientas o funcionalidades que brinda el sistema son:
+
+\begin{itemize}
+\item Foros
+\item Intercambio de Archivos
+\item Mensajería Interna
+\item Blog
+\item Wiki
+\item Chat
+\item Pizarra
+\item Lecciones
+\item Enlaces
+\item Calendario/Agenda
+\item Capacidades de búsqueda
+\item Trabajo desconectado
+\item Agregador de Noticias
+\item Grupos de Trabajo
+\item Ayuda y Orientación del curso
+\item Ayuda del Sistema
+\item Comunidad
+\item Portafolios
+\item Administración automatizada de pruebas
+\item Control de calificaciones del curso 
+\item Manejo del curso
+\item Seguimiento de usuarios
+\item Posibilidad de compartir/reusar información
+\item Plantillas del curso.
+\item Herramientas de diseño de cursos.
+\end{itemize}
+
+Para ver información completa de las características antes mencionadas y justificación de las mismas ver anexo 
+
+\section{Restricciones}
+
+\section{Rangos de Calidad}
+
+\section{Precedencia y Prioridad}
+
+\section{Otros Requerimientos de producto}
+
+\subsection{Estándares de Aplicación}
+El sistema debe ser desarrollado bajo el estándar actual de XHTML  y CSS , en un ambiente cliente-servidor, y desarrollado en PHP5.
+
+\subsection{Requerimientos del sistema}
+
+\subsection{Requerimientos de desempeño }
+
+\section{Requerimientos de documentación}
+
+\section{Riesgos}
+
+\begin{itemize}
+ \item Dedicación no exclusiva al desarrollo del sistema
+\item Estado de salud de los miembros del equipo
+\item Disponibilidad del tutor o caulquier otra persona que esté involucrada en la dirección del proyecto de desarrollo.
+\item Fallas en la plataforma tecnológica utilizada (servidores, computadores, acceso a internet)
+\end{itemize}
+
+
+\subsection{Ayuda en línea}
+
+\subsection{Manual del usuario}
+
+%Create the environment for the bibliography.  Since there is only one
+%reference, set the label width to be one character (I shall follow
+%convention as use the number '9'.  This is because it helps to remind
+%that it is the maximum number of refs that is now permitted by that
+%width).
+\begin{thebibliography}{9}
+%The \bibitem is to start a new reference.  Ensure that the cite_key is
+%unique.  You don't need to put each element on a new line, but I did
+%simply for readability.
+	\bibitem{lamport94}
+	  Leslie Lamport,
+	  \emph{\LaTeX: A Document Preparation System}.
+	  Addison Wesley, Massachusetts,
+	  2nd Edition,
+	  1994.
+
+\end{thebibliography} %Must end the environment
+
+\end{document}  %End of document.

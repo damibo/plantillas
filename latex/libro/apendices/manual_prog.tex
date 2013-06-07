@@ -1,0 +1,1508 @@
+%!TEX root = ../Libro.tex
+\chapter{Manual del administrador}
+\label{Manual}
+\section{Manual de implantación}
+\subsection{Requerimientos mínimos}
+
+\subsubsection{Servidor de aplicación}
+\begin{itemize}
+	\item Servidor HTTP: apache 2, lighthttpd, etc.
+	\item PHP 5.0 (5.2.3 recomendado) o posterior, con los módulo Rewrite (deseable) y Zip (necesario en caso de utilizar módulo ``Lecciones'').
+	\item Línea de comandos de PHP (php\_cli).
+	\item Acceso por shell.
+	\item Subversion Client. Recomendado para la descarga de Ósmosis y CakePHP. En caso de no estar disponible, tener el \emph{tarball} de Ósmosis.
+\end{itemize}
+
+\subsubsection{Servidor de base de datos}
+\begin{itemize}
+	\item Cualquier servidor de base de datos relacional soportado por CakePHP: Oracle, PostgreSQL, MySQL, SQLite, etc.
+\end{itemize}
+
+\subsubsection{Cliente}
+\begin{itemize}
+	\item Navegador web con buen soporte para CSS2.1 y Javascript.
+\end{itemize}
+
+\subsection{Código de terceras personas}
+El siguiente es un listado de librerías que utiliza y se distribuyen junto a Ósmosis2.
+
+\subsubsection{HTMLPurifier}
+\begin{itemize}
+	\item Creado por: Edward Z. Yang
+	\item Fecha de creación: 2006-2007
+	\item Estado: en constante desarrollo.
+	\item Sitio oficial: \url{http://htmlpurifier.org/}
+	\item Restricciones de uso: ninguna.
+	\item Licencia: GNU Lesser General Public
+	\item Referencias de uso en Ósmosis: plugin wiki, plugin blog.
+	\item Descripción: tiene doble función, en primer lugar corrige código HTML incorrecto para hacerlo cumplir con los estándares definidos por la W3C; y en el proceso elimina código de ataques XSS (cross-site scripting).
+\end{itemize}
+
+\subsubsection{JQuery}
+\begin{itemize}
+	\item Creado por: John Resig
+	\item Fecha de creación: 2008
+	\item Estado: en constante desarrollo.
+	\item Sitio oficial: \url{http://jquery.com/}
+	\item Restricciones de uso: ninguna.
+	\item Licencia: dual GPL/MTI
+	\item Referencias de uso en Ósmosis: visor de archivos SCORM, selector múltiple, campos autocompletados, chat.
+	\item Descripción: librería JavaScript que simplifica el manejo dinámicos de los elementos del HTML, manejo de eventos, animación y Ajax.
+	\item Plugins de JQuery utilizados:
+	\begin{itemize}
+		\item Autocomplete (\url{http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/})
+		\item bgIframe (\url{http://brandonaaron.net})
+		\item BlockUI (\url{http://malsup.com/jquery/block/})
+		\item fieldSelection (\url{http://blog.0xab.cd})
+		\item FlyDOM (\url{http://flydom.socianet.com/})		
+		\item Metadata (\url{http://plugins.jquery.com/project/metadata})
+		\item OsmosisSelector
+		\item Star Rating (\url{http://www.fyneworks.com/jquery/star-rating/})
+		\item ScrollTo (\url{http://flesler.blogspot.com/2007/10/jqueryscrollto.html})
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{TinyMCE}
+\begin{itemize}
+	\item Creado por: Moxiecode Systems AB
+	\item Fecha de creación: no registrada
+	\item Estado: en constante desarrollo.
+	\item Sitio oficial: \url{http://tinymce.moxiecode.com/}
+	\item Restricciones de uso: ninguna.
+	\item Licencia: GNU Lesser General Public
+	\item Referencias de uso en Ósmosis: plugin wiki.
+	\item Descripción: editor Javascript WYSIWYG, basado en la web, para HTML. Tiene la capacidad de convertir los textarea en editores de texto enriquecido.
+\end{itemize}
+
+\subsection{Estructura del sistema}
+Ósmosis2 mantiene la estructura básica de una aplicación desarrollada con CakePHP \citep{CakePHP_Folders_2008}:
+\begin{itemize}
+	\item app  (se referirá a este directorio como APP)
+	\item cake (se referirá a este directorio como CAKE\_DIR)
+	\item docs
+	\item index.php
+	\item vendors
+\end{itemize}
+
+Sin embargo, Ósmosis2 no se distribuye junto con las librerías que conforman el core de CakePHP. Sólo se distribuye el equivalente al contenido del directorio \emph{app}.\\
+
+\subsection{Instalación}
+El proceso de instalación de Ósmosis se puede dividir en cuatro secciones:
+\begin{enumerate}
+	\item Instalación de CakePHP
+	\item Instalación de Ósmosis
+	\item Configuración de Ósmosis
+	\item Instalación y habilitación de Plugins
+\end{enumerate}
+
+\subsubsection{Instalación de CakePHP}
+Existen múltiples maneras de instalar CakePHP \citep{CakePHP_Install_2008}, el definir cuál es la más adecuada dependerá de las capacidades administrativas que se tengan sobre el servidor.
+
+\subsubsection{Instalación de Ósmosis}
+Una vez verificada la correcta instalación de CakePHP, es necesario sustituir el directorio \emph{app} que se distribuye con Cake por Ósmosis.\\
+
+\begin{lstlisting}
+rm -rf app
+svn co http://tools.assembla.com/svn/osmosis/trunk/osmosis app
+\end{lstlisting}
+
+En caso de no poseer el cliente de subversion:
+
+\begin{lstlisting}
+rm -rf app
+tar -xzvf osmosis.tar.gz
+\end{lstlisting}
+
+Con cualquiera de las dos opciones el directorio app deberá contener los archivos de Ósmosis. También se debe asegurar que la carpeta tmp dentro del directorio de Ósmosis tenga permisos de escritura por el usuario que corre el servidor. En linux esto podría ser como sigue:
+
+\begin{lstlisting}
+chown -R www-data app/tmp
+\end{lstlisting}
+
+\subsubsection{Configuración de Ósmosis}
+La configuración inicial de Ósmosis consiste en la modificación del \textbf{archivo APP/config/database.php.default}, la cual tiene instrucciones claras para la configuración.\\
+
+Una vez modificado este archivo, debe guardarse como \textbf{database.php}
+\begin{lstlisting}[language=PHP]
+class DATABASE_CONFIG {
+	var $default = array(
+		'driver'	 => 'mysql',
+		// Alguno de los drivers soportados: mysql, postgres, oracle ...
+		'persistent' => false,
+		// Utilizar o no conexiones persistentes
+		'host'		 => 'localhost',
+		// Host del servidor de bases de datos
+		'login'		 => 'user',
+		// Nombre de usuario de la base de datos
+		'password'	 => 'password',
+		// Clave del usuario de la base de datos
+		'database'	 => 'name',
+		// Nombre de la base de datos
+		'prefix'	 => ''
+		// Prefijo de las tablas (opcional)
+	);
+}
+\end{lstlisting}
+
+Una vez configurada la conexión a la base de datos, es necesario cargar las tablas. Para ello Ósmosis hace uso de los esquemas de base de datos de CakePHP.\\
+
+\begin{lstlisting}
+alias cake=CAKE_DIR/console/cake
+cake schema run create
+\end{lstlisting}
+
+Siguiendo las instrucciones disponibles en la consola se cargarán las tablas en la base de datos configurada.
+
+El último paso del proceso de configuración de Ósmosis consiste en ejecutar la acción init del controlador InitAcl, la cual configura la base de datos de permisos y crea el primer usuario administrador. Para ejecutar dicha acción apunte el navegador a \texttt{www.example.com/initAcl/init}.\\
+
+Para poder ejecutar dicha acción es necesario modificar temporalmente el archivo \textbf{APP/config/core.php} para deshabilitar la autenticación:
+\begin{lstlisting}[language=PHP]
+	Configure::write('Auth.disabled', true);
+\end{lstlisting}
+
+No olvide reactivar la autenticación posteriormente:
+\begin{lstlisting}[language=PHP]
+	Configure::write('Auth.disabled', false);
+\end{lstlisting}
+
+Por razones de seguridad se recomienda cambiar el valor del \emph{sal} de seguridad en el archivo \textbf{APP/config/core.php} por cualquier cadena de caracteres suficientemente aleatoria:
+\begin{lstlisting}[language=PHP]
+	Configure::write('Security.salt', '$hl56MMsdb0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
+\end{lstlisting}
+
+Esta cadena de caracteres es usada como semilla de encriptamiento de las claves de usuarios, y para evitar robo de sesiones, entre otras, por lo que si se deja igual a como es distribuido actualmente el paquete de Ósmosis se deja más vulnerable la aplicación.
+
+\subsubsection{Instalación y habilitación de plugins}
+Las herramientas que posee Ósmosis2 están construidas utilizando su arquitectura de plugins. La lista de plugins distribuidos oficialmente es la siguiente:
+\begin{itemize}
+	\item Agenda
+	\item Blog
+	\item Chat
+	\item Foro
+	\item Locker
+	\item Quiz
+	\item Scorm
+	\item Wiki
+\end{itemize}
+
+Si desea instalar otro plugin debe colocarlo en el directorio \textbf{APP/plugins} junto con los anteriores. Una vez colocados los plugins correctamente, estarán disponibles, para ser instalados, en el área administrativa de plugins (www.example.com/admin/plugins). \\
+
+\section{Desarrollo de Plugins}
+
+\subsubsection{Estructura Inicial}
+CakePHP ofrece a los desarrolladores una herramienta de línea de comandos, la cónsola de Cake, que permite agilizar el proceso de desarrollo de aplicaciones. Una de las facilidades que ofrece es la generación de la estructura de archivos de un plugin de CakePHP.
+
+\begin{lstlisting}
+cake bake plugin nombre_plugin
+\end{lstlisting}
+
+Esto genera un directorio ``nombre\_plugin'' en el directorio plugins de Ósmosis.
+
+\subsubsection{Descripción del Plugin}
+Una vez creada la estructura básica del plugin, es recomendable crear el archivo \textbf{APP/plugins/nombre\_plugin/config/description.php} en el cual se colocaran los siguientes descriptores del plugin.\\
+
+\begin{lstlisting}[language=PHP]
+<?php
+Configure::write(
+	'NombrePlugin.description',
+	'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+);
+Configure::write(
+	'NombrePlugin.title',
+	'Nombre del Plugin'
+);
+Configure::write(
+	'NombrePlugin.type',
+	array('tool')
+);
+Configure::write(
+	'NombrePlugin.author',
+	'Osmosis Team'
+);
+?>
+\end{lstlisting}
+
+Todos los valores son de texto libre, excepto \emph type que debe ser un arreglo. El los valores aceptados \emph{type} son `tool' si desea que aparezca en la barra de herramientas, sino marcarlo como `other'.\\
+
+La existencia de este archivo es recomendable, en caso de no existir se tratará el plugin como `other' y no se mostrará la descripción.
+
+\subsubsection{Estructura de la Base de Datos}
+Ósmosis no impone restricciones explícitas sobre la estructura de la base de datos de un plugin, sin embargo se recomienda:
+\begin{itemize}
+	\item Seguir las convenciones de CakePHP.
+	\item Prefijar los nombres de las tablas con el nombre del plugin, de este modo se facilita la identificación de las tablas.
+\end{itemize}
+
+Para la carga de las tablas de los plugins se recomienda usar los schemas de base de datos de CakePHP, ya que son agnósticos al manejador de base de datos y permiten automatizaciones interesantes.\\
+
+La generación de los esquemas de base de datos se hacen con la cónsola de Cake, desde el directorio en el cual se quiere crear el schema.
+
+\begin{lstlisting}
+cake schema generate
+\end{lstlisting}
+
+El schema creado debe ubicarse en el directorio \emph{/config/sql} del plugin.
+
+\section[Internacionalización]{Internacionalización de la plataforma}
+Los mensajes visibles por el usuario en Ósmosis están totalidad en inglés, y se recomienda seguir esta convención para los plugins. Sin embargo, CakePHP permite la internacionalización de sus aplicaciones por medio de archivos de traducción.
+
+\subsection{Funciones de Internacionalización}
+Dentro de cualquier sección de una aplicación Cake está disponible un juego de funciones para la internacionalización de las cadenas de caracteres. De dichas funciones, la más utilizada es \_\_() la cual recibe dos parámetros:
+\begin{enumerate}
+	\item Cadena de caracteres internacionalizable
+	\item Booleano que determina si la función debe imprimir o devolver la cadena traducida
+\end{enumerate}
+
+Un ejemplo del uso de esta función:
+\begin{lstlisting}[language=PHP]
+<?php
+	$del = __('Delete', true); //La variable $del contiene la palabra traducida
+	__('Delete'); // Se imprime la palabra traducida
+?>
+\end{lstlisting}
+
+\subsection{Extracción de cadenas internacionalizadas}
+CakePHP ofrece otra herramienta para ayudar a los desarrolladores a generar los archivos para traducir sus aplicaciones. Nuevamente, utilizado la consola de CakePHP.
+
+\begin{lstlisting}
+cake i18n
+\end{lstlisting}
+
+Siguiendo las instrucciones se generará el archivo de traducciones.
+Cada plugin tiene un archivo de traducción, por lo cual, al generarlo, se debe indicar la ruta completa hasta el plugin que se desea traducir. Por ejemplo /Users/user/Sites/osmosis/agenda, en donde agenda es el plugin seleccionado. Así mismo, para llevar a cabo la traducción se debe contar con la misma estructura de archivos que posee la aplicación principal.
+El archivo de traducción, \textbf{default.pot}, se generará en la carpeta \textbf{locale} de cada plugin.
+
+
+\subsection{Funcionamiento de los archivos de traducción de cake}
+Los archivos para manejar la traducción del lenguaje se encuentran en el directorio \textbf{locale}. Cada lenguaje es un subdirectorio dentro de dicha carpeta, cuyo nombre consta de tres caracteres correspondiente al al nombre del idioma al cual se hace referencia, siguiendo el estándar para los códigos de representación de nombres de idiomas (ISO 639-2)\citep{MAN_INT}. Por ejemplo \emph{eng} para el idioma inglés (english), \emph{ita} para el idioma italiano (italian)
+
+En el subdirectorio del idioma se debe crear una directorio de nombre \textbf{LC\_MESSAGES} que contendrá el archivo ``default.po''. Este archivo consta de cadenas de caracteres con claves. 
+
+Los archivos .po deben tener un encoding ISO-8859-1 y los strings debe ser menores a 1014 caracteres, a continuación se muestra un ejemplo de cómo se ven las cadenas de caracteres y las claves de las mismas en el archivo .po: 
+\begin{lstlisting}{}
+msgid "Hello World"
+msgstr "Hola Mundo"
+\end{lstlisting}
+
+El archivo de traducción que se obtiene a partir de esta función toma el primer parámetro como el la clave a la cual se le asignará el mensaje traducido correspondiente.
+
+\subsection{Cómo traducir}
+Para generar la traduccion completa de la plataforma, es necesario completar cada par msgid - msgstr, donde el msgid siempre queda fijo por ser la clave usada dentro de la plataforma, y msgstr el mensaje correspondiente a la traducción que se desea construir. En algunos casos es posible encontrar dentro de la cadena msgid subcadenas de reemplazo, que son palabras que comienzan por \%, usualmente siempre seguidas de una única letra \textbf{s}. Estas cadenas de reemplazo representan una o varias palabras, números, o cualquier otra cosa que haga sentid dentro de la construcción. Un ejemplo de cadena de reemplazo es el siguiente\\
+
+\begin{lstlisting}{}
+msgid "Hello %s"
+msgstr "Hola %s"
+\end{lstlisting}
+
+Donde la cadena de reemplazo \%s, puede representar el nombre de una persona.\\
+
+Esto existe para la facilidad del programador, pues delega el trabajo de traducción a varios pares clave-valor de traduccion, no obstante recomendamos hacer el menor uso posible de estas construcciones, puesto que aunque es posible que para el idioma en que se haya construido el msgid tenga sentido ese reemplazo, para otros idiomas con gramáticas distintas puede ser muy engorroso saber la estructura gramatical adecuada que se debe usar.\\
+
+\subsection{Cómo generar el archivo binario (.mo)}
+El archivo con extensión \textbf{.mo} se genera en el mismo directorio que contiene al archivo de extensión .po. Para generarlo se emplea el comando 
+\begin{lstlisting}{}
+'msgfmt -o target.mo source.po'
+\end{lstlisting}
+
+\section{Más información}
+CakePHP tiene a disposición de los desarrolladores el manual del framework en la dirección \url{http://book.cakephp.org/}. En este manual se explica todo lo relacionado a CakePHP, su instalación, configuración y convenciones así como el desarrollo de aplicaciones bajo este framework.
+
+\section{Diccionario de datos}
+\subsection{Tablas de ACL}
+% 
+% Database: 'osmosis'
+%
+% Structure: acos
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	parent\_id & int(11) & Yes & NULL \\ \hline 
+	model & varchar(255) & Yes &  \\ \hline 
+	foreign\_key & int(11) & Yes & NULL \\ \hline 
+	alias & varchar(255) & Yes &  \\ \hline 
+	lft & int(11) & Yes & NULL \\ \hline 
+	rght & int(11) & Yes & NULL \\ \\ 
+\caption[Estructura de la tabla acos]{Estructura de la tabla acos. Los Access Control Objects son los objetos cuyo acceso debe restringirse \citep{CakePHP_ACL_2008}} \label{tab:acos-structure} \\
+\end{longtable}
+
+%
+% Structure: aros
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	parent\_id & int(11) & Yes & NULL \\ \hline 
+	model & varchar(255) & Yes &  \\ \hline 
+	foreign\_key & int(11) & Yes & NULL \\ \hline 
+	alias & varchar(255) & Yes &  \\ \hline 
+	lft & int(11) & Yes & NULL \\ \hline 
+	rght & int(11) & Yes & NULL \\ \\ 
+\caption[Estructura de la tabla aros]{Estructura de la tabla aros. Los Access Request Objects son los entes que requieren acceso a los objetos restringidos \citep{CakePHP_ACL_2008}.} \label{tab:aros-structure} \\ 
+\end{longtable}
+
+%
+% Structure: aros_acos
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline
+	aro\_id & int(11) & Yes & NULL \\ \hline 
+	aco\_id & int(11) & Yes & NULL \\ \hline 
+	\_create & int(11) & Yes & 0 \\ \hline 
+	\_read & int(11) & Yes & 0 \\ \hline 
+	\_update & int(11) & Yes & 0 \\ \hline 
+	\_delete & int(11) & Yes & 0 \\ \\ 
+\caption[Estructura de la tabla aros\_acos]{Estructura de la tabla aros\_acos. Establece los permisos de un ARO sobre cada ACO.} \label{tab:aros_acos-structure} \\ 
+\end{longtable}
+
+
+\subsection{Tablas del Núcleo de Ósmosis}
+%
+% Structure: members
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro} \\ \\ \hline
+	institution\_id & varchar(20) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro dentro de la institución (canré)} \\ \\ \hline
+	full\_name & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre completo del miembro} \\ \\ \hline
+	email & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Dirección de e-mail del miembro} \\ \\ \hline
+	phone & varchar(20) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número telefónico del miembro} \\ \\ \hline
+	country & varchar(20) & Yes & NULL & \parbox[t]{0.35\textwidth}{País de nacimiento} \\ \\  \hline
+	city & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Ciudad de nacimiento} \\ \\ \hline 
+	age & int(2) & Yes & NULL & \parbox[t]{0.35\textwidth}{Edad} \\ \\  \hline
+	sex & varchar(1) & Yes & M & \parbox[t]{0.35\textwidth}{Sexo (M o F)} \\ \\  \hline
+	username & varchar(15) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre de usuario (Login)} \\ \\  \hline
+	password & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Contraseña} \\ \\
+\caption[Estructura de la tabla members]{Estructura de la tabla members. Mantiene los datos de los miembros registrados en Ósmosis} \label{tab:members-structure} \\  
+\end{longtable}
+
+%
+% Structure: plugins
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & smallint(4)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del plugin} \\ \\  \hline
+	title & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título del plugin} \\ \\  \hline
+	active & tinyint(1) & Yes & NULL & \parbox[t]{0.35\textwidth}{Activación global del plugin} \\ \hline 
+	name & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del plugin} \\ \\  \hline
+	description & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del plugin} \\ \\  \hline
+	author & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Autor} \\ \hline 
+	types & varchar(30) & Yes & tool & \parbox[t]{0.35\textwidth}{Tipo del plugin} \\ \\  \hline
+\caption[Estructura de la tabla plugins]{Estructura de la tabla plugins. Maneja los plugins habilitados para la plataforma.} \label{tab:plugins-structure} \\
+\end{longtable}
+
+%
+% Structure: courses
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del curso} \\ \\  \hline
+	department\_id & int(4)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del departamento al cual esta asociado el curso} \\ \\  \hline
+	owner\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro creador del curso} \\ \\  \hline
+	code & varchar(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Código del curso} \\ \\  \hline
+	name & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del curso} \\ \\  \hline
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del curso} \\ \\  \hline
+	created & date & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación del curso} \\ \\  \hline
+ \caption[Estructura de la tabla courses]{Estructura de la tabla courses. Cursos registrados en la plataforma} \label{tab:courses-structure} \\
+\end{longtable}
+
+%
+% Structure: courses_members
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la relación entre los cursos y los miembros}\\ \hline 
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro} \\ \\  \hline
+	course\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del curso} \\ \\  \hline 
+	role\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del rol del miembro en ese curso} \\ \\ 
+\caption[Estructura de la tabla members]{Estructura de la tabla courses\_members. Mantiene la matrícula (Enrollments) de miembros en los cursos de la plataforma} \label{tab:courses_members-structure} \\
+\end{longtable}
+
+%
+% Structure: course_tools
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la relación entre los cursos y las herramientas} \\ \hline 
+	\textbf{course\_id} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del curso} \\ \\  \hline
+	\textbf{plugin\_id} & smallint(4) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del plugin} \\ \\ 
+\caption[Estructura de la tabla course\_tools]{Estructura de la tabla course\_tools. Maneja los plugins (tipo tool) activados por curso.} \label{tab:course_tools-structure} \\
+\end{longtable}
+
+%
+% Structure: departments
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(4) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del departamento} \\ \\  \hline
+	name & varchar(150) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del departamento} \\ \\  \hline
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del departamento} \\ \\  \hline
+\caption[Estructura de la tabla departments]{Estructura de la tabla departments. Maneja los departamentos que agrupan los cursos.} \label{tab:departments-structure} \\ 
+\end{longtable}
+
+%
+% Structure: roles
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del Rol} \\ \\ \hline 
+	parent\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del Rol padre} \\ \\ \hline 
+	role & varchar(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del rol} \\ \\ 
+ \caption[Estructura de la tabla roles]{Estructura de la tabla roles. Mantiene una estructura arborescente de los roles del sistema} \label{tab:roles-structure} \\
+\end{longtable}
+
+\subsection{Tablas relacionadas al plugin Blog}
+%
+% Structure: blog_blogs
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del blog} \\ \\  \hline
+	title & varchar(200) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título del blog} \\ \\  \hline
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del blog} \\ \\  \hline
+	member\_id & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro propietario del blog} \\ \\
+\caption[Estructura de la tabla blogs]{Estructura de la tabla blogs. Mantiene el listado de los blogs de los miembros.} \label{tab:blog_blogs-structure} \\
+\end{longtable}
+
+%
+% Structure: blog_comments
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del comentario} \\ \\  \hline
+	comment & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del comentario} \\ \\  \hline
+	post\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la entrada al la cual está asociado el comentario} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro que realizó el comentario} \\ \\
+\caption[Estructura de la tabla comments]{Estructura de la tabla comments. Almacena los comentarios a las entradas} \label{tab:blog_comments-structure} \\
+\end{longtable}
+
+%
+% Structure: blog_posts
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(10)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la entrada} \\ \\  \hline
+	title & varchar(50) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título de la entrada} \\ \\  \hline
+	body & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Cuerpo o contenido de la entrada} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación de la entrada} \\ \\  \hline
+	modified & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de modificación de la entrada} \\ \\  \hline
+	blog\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del blog al cual pertenece la entrada} \\ \\  \hline
+	slug & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Versión para URLs del título de la entrada} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del usuario que escribió la entrada} \\ \\
+\caption[Estructura de la tabla posts]{Estructura de la tabla posts. Almacena las entradas de todos los blogs} \label{tab:blog_posts-structure} \\
+\end{longtable}
+
+\subsection{Tablas relacionadas al plugin Foro}
+%
+%
+% Structure: forum_discussions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la discusión} \\ \\ \hline
+	topic\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del tema al cual está relacionada la discusión} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del usuario que inició la discusión} \\ \\  \hline
+	title & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título de la discusión} \\ \\  \hline
+	content & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Mensaje} \\ \\  \hline
+	sticky & tinyint(1) & Yes & NULL & \parbox[t]{0.35\textwidth}{Discusión fija (se mantiene en el tope de la lista)} \\ \\  \hline
+	status & varchar(20) & Yes & unlocked & \parbox[t]{0.35\textwidth}{Estado de la discusión (bloqueada o no)} \\ \\  \hline
+	response\_count & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número de respuestas a la discusión} \\ \\  \hline
+	discussion\_visit\_count & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número de visitas a la discusión} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación de la discusión} \\ \\  \hline
+	modified & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de modificación de la discusión} \\ \\ 
+\caption[Estructura de la tabla discussions]{Estructura de la tabla discussions. Almacena las discusiones del foro} \label{tab:forum_discussions-structure} \\
+\end{longtable}
+
+%
+% Structure: forum_responses
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la respuesta} \\ \\  \hline
+	discussion\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la discusión a la cual pertenece la respuesta} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del usuario que escribió la respuesta} \\ \\  \hline
+	content & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Contenido de la respuesta} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación} \\ \\  \hline
+	modified & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de modificación} \\ \\  \hline
+\caption[Estructura de la tabla responses]{Estructura de la tabla responses. Almacena las respuestas a las discusiones} \label{tab:forum_responses-structure} \\ 
+\end{longtable}
+
+%
+% Structure: forum_topics
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del tema} \\ \\  \hline
+	name & varchar(120) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del tema} \\ \\  \hline
+	description & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del tema} \\ \\  \hline
+	forum\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del foro al cuál pertenece el tema} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación del tema} \\ \\  \hline
+	status & varchar(20) & Yes & unlocked & \parbox[t]{0.35\textwidth}{Estado del tema (bloqueada o no)} \\ \\ 
+\caption[Estructura de la tabla topics]{Estructura de la tabla topics. Almacena los temas de los foros} \label{tab:forum_topics-structure} \\
+\end{longtable}
+
+\subsection{Tablas relacionadas al plugin Casillero}
+%
+%
+% Structure: locker_documents
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del documento } \\ \\  \hline
+	name & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del documento} \\ \\  \hline
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del documento} \\ \\  \hline
+	file\_name & varchar(150) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del archivo en el disco} \\ \\  \hline
+	type & varchar(50) & Yes & application/octet-stream & \parbox[t]{0.35\textwidth}{Tipo MIME del archivo} \\ \\  \hline
+	size & int(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Tamaño del archivo en bytes} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Dueño del documento} \\ \\ \hline
+	folder\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Carpeta contenedora del documento} \\ \\
+\caption[Estructura de la tabla documents]{Estructura de la tabla documents. Almacena los datos de los documentos y su ubicación dentro del Casillero} \label{tab:locker_documents-structure} \\
+\end{longtable}
+
+%
+% Structure: locker_folders
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes &  NULL & \parbox[t]{0.35\textwidth}{Identificador de las carpetas del Casillero} \\ \\ \hline
+	name & varchar(100) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre de la carpeta} \\ \\ \hline 
+	folder\_name & varchar(150) & Yes &  NULL & \parbox[t]{0.35\textwidth}{Nombre de la carpeta?} \\ \\ \hline
+	parent\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la carpeta padre} \\ \\ \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Dueño de la carpeta} \\ \\
+ \caption[Estructura de la tabla folders]{Estructura de la tabla folders. Almacena la información de las carpetas de los Casilleros de cada miembro} \label{tab:locker_folders-structure} \\
+\end{longtable}
+
+\subsection{Tablas relacionadas al plugin Quiz}
+%
+%
+% Structure: quiz_choice_choices
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la opción} \\ \\  \hline
+	choice\_question\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de selección a la cual pertenece la opción} \\ \\  \hline
+	text & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Contenido de la opción} \\ \\  \hline
+	position & tinyint(3) & Yes & 0 & \parbox[t]{0.35\textwidth}{Posición fija} \\ \\
+\caption[Estructura de la tabla choice\_choices]{Estructura de la tabla choice\_choices. Almacena las opciones de una pregunta de selección} \label{tab:quiz_choice_choices-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_choice_questions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de selección} \\ \\  \hline
+	body & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Planteamiento de la pregunta} \\ \\  \hline
+	shuffle & tinyint(1) & Yes & NULL & \parbox[t]{0.35\textwidth}{Determina si deben mostrarse las opciones ordenadas de manera aleatoria} \\ \\  \hline
+	max\_choices & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número máximo de selecciones que puede hacerse como respuesta} \\ \\  \hline
+	min\_choices & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número mínimo de selecciones que debe hacerse como respuesta} \\ \\ 
+\caption[Estructura de la tabla choice\_questions]{Estructura de la tabla choice\_questions. Almacena las preguntas de selección} \label{tab:quiz_choice_questions-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_choice_questions_quizzes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL \\ \hline 
+	choice\_question\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de selección} \\ \\  \hline
+	quiz\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del quiz} \\ \\
+\caption[Estructura de la tabla choice\_questions\_quizzes]{Estructura de la tabla choice\_questions\_quizzes. Almacena la asociación entre las preguntas y los quices} \label{tab:quiz_choice_questions_quizzes-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_matching_choices
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la opción} \\ \\  \hline
+	text & text & Yes & NULL  & \parbox[t]{0.35\textwidth}{Contenido de la opción} \\ \\
+\caption[Estructura de la tabla matching\_choices]{Estructura de la tabla matching\_choices. Almacena las opciones para las preguntas de apareamiento} \label{tab:quiz_matching_choices-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_matching_choices_matching_questions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL \\ \hline 
+	matching\_question\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de apareamiento} \\ \\  \hline
+	source & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la opción fuente} \\ \\  \hline
+	target & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la opción destino} \\ \\  \hline
+	position & tinyint(3) & Yes & 0 & \parbox[t]{0.35\textwidth}{Posición fija de la opción fuente} \\ \\  \hline
+\caption[Estructura de la tabla matching\_choices\_matching\_questions]{Estructura de la tabla matching\_choices\_matching\_questions. Almacena la relación entre un par de opciones (pareja correcta) dentro de una pregunta de apareamiento} \label{tab:quiz_matching_choices_matching_questions-structure} \\ 
+\end{longtable}
+
+%
+% Structure: quiz_matching_questions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de apareamiento} \\ \\  \hline
+	body & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Planteamiento de la pregunta} \\ \\  \hline
+	shuffle & tinyint(1) & Yes & NULL & \parbox[t]{0.35\textwidth}{Determina si deben mostrarse las opciones ordenadas de manera aleatoria} \\ \\  \hline
+	max\_associations & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número máximo de emparejamientos que se pueden hacer para una respuesta} \\ \\  \hline
+	min\_associations & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número mínimo de emparejamientos que deben realizarse para una respuesta} \\ \\ 
+\caption{Estructura de la tabla matching\_questions} \label{tab:quiz_matching_questions-structure} \\ 
+\end{longtable}
+
+%
+% Structure: quiz_matching_questions_quizzes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL \\ \hline 
+	matching\_question\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de apareamiento} \\ \\  \hline
+	quiz\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del quiz} \\ \\ 
+\caption[Estructura de la tabla matching\_questions\_quizzes]{Estructura de la tabla matching\_questions\_quizzes. Mantiene las preguntas de apareamiento por quiz} \label{tab:quiz_matching_questions_quizzes-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_ordering_choices
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la opción} \\ \\  \hline
+	ordering\_question\_id & char(36) & Yes & NULL  & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de ordenamiento} \\ \\  \hline
+	text & text & Yes & NULL  & \parbox[t]{0.35\textwidth}{Contenido de la opción} \\ \\  \hline
+	position & tinyint(3) & Yes & 0  & \parbox[t]{0.35\textwidth}{Posición fija de la opción} \\ \\
+\caption[Estructura de la tabla ordering\_choices]{Estructura de la tabla ordering\_choices. Almacena las opciones para las preguntas de ordenamiento} \label{tab:quiz_ordering_choices-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_ordering_questions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de ordenamiento} \\ \\  \hline
+	body & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Planteamiento de la pregunta} \\ \\  \hline
+	shuffle & tinyint(1) & Yes & NULL & \parbox[t]{0.35\textwidth}{Determina si deben mostrarse las opciones ordenadas de manera aleatoria} \\ \\  \hline
+	max\_choices & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número máximo de opciones que pueden ser parte de la respuesta} \\ \\  \hline
+	min\_choices & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número mínimo de opciones que deben ser parte de la respuesta} \\ \\  \hline
+ \caption[Estructura de la tabla ordering\_questions]{Estructura de la tabla ordering\_questions. Almacena las preguntas de ordenamiento} \label{tab:quiz_ordering_questions-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_ordering_questions_quizzes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL \\ \hline 
+	ordering\_question\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de ordenamiento} \\ \\  \hline
+	quiz\_id & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del quiz} \\ \\
+\caption[Estructura de la tabla ordering\_questions\_quizzes]{Estructura de la tabla ordering\_questions\_quizzes. Mantiene la asociación entre quices y las pregunta de ordenamiento} \label{tab:quiz_ordering_questions_quizzes-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_quizzes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del quiz} \\ \\ \hline
+	name & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre o título del Quiz} \\ \\
+\caption[Estructura de la tabla quizzes]{Estructura de la tabla quizzes. Almacena los quices registrados} \label{tab:quiz_quizzes-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_text_questions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta} \\ \\ \hline
+	title & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título de la pregunta} \\ \\ \hline
+	body & text & Yes & NULL  & \parbox[t]{0.35\textwidth}{Planteamiento de la pregunta} \\ \\ \hline
+	format & varchar(5) & Yes & NULL  & \parbox[t]{0.35\textwidth}{Formato de la respuesta} \\ \\
+\caption[Estructura de la tabla text\_questions]{Estructura de la tabla text\_questions. Almacena las preguntas de desarollo} \label{tab:quiz_text_questions-structure} \\
+\end{longtable}
+
+%
+% Structure: quiz_text_questions_quizzes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de las preguntas de los quizzes}\\ \hline 
+	\textbf{text\_question\_id} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la pregunta de desarollo} \\ \\ \hline 
+	\textbf{quiz\_id} & char(36) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del quiz} \\ \\
+\caption[Estructura de la tabla text\_questions\_quizzes]{Estructura de la tabla text\_questions\_quizzes. Mantiene la asociación entre quices y las pregunta de desarollo} \label{tab:quiz_text_questions_quizzes-structure} \\
+\end{longtable}
+
+
+\subsection{Tablas relacionadas al plugin Scorm}
+%
+% Structure: scorm_attendee_trackings
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado attendee trackings}\\ \hline 
+	student\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del estudiante al cual está asociado attendee trackings}\\ \hline 
+	datamodel\_element & varchar(255) & Yes & NULL \\ \hline 
+	value & varchar(255) & Yes & NULL \\ \\ 
+\caption{Estructura de la tabla scorm\_attendee\_trackings} \label{tab:scorm_attendee_trackings-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_choice_considerations
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado choice considerations}\\ \hline 
+	preventActivation & varchar(5) & Yes & false \\ \hline 
+	constrainChoice & varchar(5) & Yes & false \\ \\ 
+\caption{Estructura de la tabla scorm\_choice\_considerations} \label{tab:scorm_choice_considerations-structure} \\ 
+\end{longtable}
+
+%
+% Structure: scorm_conditions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL\\ \hline 
+	referencedObjective & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo referencedObjective del elemento ruleCondition de SCORM} \\ \\  \hline
+	measureThreshold & varchar(7) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo measureThreshold del elemento ruleCondition de SCORM} \\ \\  \hline
+	operator & varchar(4) & Yes & noOp & \parbox[t]{0.35\textwidth}{Corresponde al atributo operator del elemento ruleCondition de SCORM} \\ \\  \hline
+	ruleCondition & varchar(27) & Yes & NULL \\ \hline 
+	rule\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la regla a la cual está asociada condition}\\ \\ 
+\caption{Estructura de la tabla conditions} \label{tab:scorm_conditions-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_control_modes
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado control modes}\\ \hline 
+	choiceExit & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo choiceExit del elemento controlMode de SCORM} \\ \\  \hline
+	choice & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo choice del elemento controlMode de SCORM } \\ \\  \hline
+	flow & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo flow del elemento controlMode de SCORM} \\ \\  \hline
+	forwardOnly & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo forwardOnly del elemento controlMode de SCORM} \\ \\  \hline
+	useCurrentAttemptObjectiveInfo & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo useCurrentAttemptObjectiveInfo del elemento controlMode de SCORM} \\ \\  \hline
+	useCurrentAttemptProgressInfo & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo useCurrentAttemptProgressInfo del elemento controlMode de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla control\_modes} \label{tab:scorm_control_modes-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_delivery_controls
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de delivery control}\\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado delivery controls}\\ \hline 
+	tracked & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo tracked del elemento deliveryControls de SCORM} \\ \\  \hline
+	completionSetByContent & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo completionSetByContent del elemento deliveryControls de SCORM} \\ \\  \hline
+	objectiveSetByContent & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo objectiveSetByContent  del elemento deliveryControls de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla delivery\_controls} \label{tab:scorm_delivery_controls-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_map_infos
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de map info}l\\ \hline 
+	objective\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del objective al cual está asociado map info}\\ \hline 
+	targetObjectiveID & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo targetObjectiveID del elemento mapInfo de SCORM} \\ \\  \hline
+	readSatisfiedStatus & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo readSatisfiedStatus del elemento mapInfo de SCORM} \\ \\  \hline
+	readNormalizedMeasure & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo readNormalizedMeasure del elemento mapInfo de SCORM} \\ \\  \hline
+	writeSatisfiedStatus & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo writeSatisfiedStatus del elemento mapInfo de SCORM} \\ \\  \hline
+	writeNormalizedMeasure & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo writeNormalizedMeasure del elemento mapInfo de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla map\_infos} \label{tab:scorm_map_infos-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_objectives
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de objectives}\\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado objectives}\\ \hline 
+	satisfiedByMeasure & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo satisfiedByMeasure del elemento objective de SCORM} \\ \\  \hline
+	minNormalizedMeasure & varchar(3) & Yes & 1.0 & \parbox[t]{0.35\textwidth}{Corresponde al elemento minNormalizedMeasure del elemento objective de SCORM} \\ \\  \hline
+	objectiveID & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo objectiveID del elemento objective de SCORM} \\ \\  \hline
+	primary & tinyint(1) & Yes & 0 \\ \\ 
+ \caption{Estructura de la tabla objectives} \label{tab:scorm_objectives-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_randomizations
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de randomization}\\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado el randomization}\\ \hline 
+	randomizationTiming & varchar(16) & Yes & never & \parbox[t]{0.35\textwidth}{Corresponde al atributo randomizationTiming del elemento randomizationControls de SCORM } \\ \\  \hline
+	selectCount & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo randomizationTiming del elemento randomizationControls de SCORM} \\ \\  \hline
+	reorderChildren & varchar(5) & Yes & false & \parbox[t]{0.35\textwidth}{Corresponde al atributo reorderChildren del elemento randomizationControls de SCORM} \\ \\  \hline
+	selectionTiming & varchar(16) & Yes & never & \parbox[t]{0.35\textwidth}{Corresponde al atributo selectionTiming del elemento randomizationControls de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla randomizations} \label{tab:scorm_randomizations-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_rollups
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del rollup}\\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado rollup}\\ \hline 
+	rollupObjectiveSatisfied & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo rollupObjectiveSatisfied del elemento rollupRules de SCORM} \\ \\  \hline
+	rollupProgressCompletion & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo rollupProgressCompletion del elemento rollupRules de SCORM} \\ \\  \hline
+	objectiveMeasureWeight & varchar(20) & Yes & 1.0000 & \parbox[t]{0.35\textwidth}{Corresponde al atributo objectiveMeasureWeight del elemento rollupRules de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla rollups} \label{tab:scorm_rollups-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_rollup_considerations
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado el rollup consideration}\\ \hline 
+	requiredForSatisfied & varchar(15) & Yes & always & \parbox[t]{0.35\textwidth}{Corresponde al atributo requiredForSatisfied del elemento rollupConsiderations de SCORM } \\ \\  \hline
+	requiredForNotSatisfied & varchar(15) & Yes & always & \parbox[t]{0.35\textwidth}{Corresponde al atributo requiredForNotSatisfied del elemento rollupConsiderations de SCORM} \\ \\  \hline
+	requiredForComplete & varchar(15) & Yes & always & \parbox[t]{0.35\textwidth}{Corresponde al atributo requiredForComplete del elemento rollupConsiderations de SCORM} \\ \\  \hline
+	requiredForIncomplete & varchar(15) & Yes & always & \parbox[t]{0.35\textwidth}{Corresponde al atributo requiredForIncomplete del elemento rollupConsiderations de SCORM} \\ \\  \hline
+	measureSatisfactionIfActive & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo measureSatisfactionIfActive del elemento rollupConsiderations de SCORM} \\ \\  \hline
+ \caption{Estructura de la tabla rollup\_considerations} \label{tab:scorm_rollup_considerations-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_rules
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL \\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cual está asociado rules}\\ \hline 
+	type & varchar(4) & Yes & NULL \\ \hline 
+	conditionCombination & varchar(3) & Yes & all & \parbox[t]{0.35\textwidth}{Corresponde al atributo conditionCombination del elemento ruleConditions de SCORM}\\ \hline 
+	action & varchar(20) & Yes & NULL \\ \hline 
+	minimumPercent & varchar(6) & Yes & 0.0000 & \parbox[t]{0.35\textwidth}{Corresponde al atributo minimumPercent del elemento rollupRule de SCORM}\\ \hline 
+	minimumCount & varchar(5) & Yes & 0 & \parbox[t]{0.35\textwidth}{Corresponde al atributo minimumCount del elemento rollupRule de SCORM} \\ \hline 
+	rollup\_id & int(11) & Yes & NULL \\ \\ 
+ \caption{Estructura de la tabla rules} \label{tab:scorm_rules-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_scorms
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCORM} \\ \hline 
+	course\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del curso en el cual se encuentra el SCORM}\\ \hline 
+	name & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del recurso SCORM}\\ \hline 
+	file\_name & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del archivo que contiene el paquete SCORM}\\ \hline 
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del recurso SCORM}\\ \hline 
+	version & varchar(9) & Yes & NULL & \parbox[t]{0.35\textwidth}{Version del SCORM}\\ \hline 
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación del SCORM}\\ \hline 
+	modified & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de modificación del SCORM}\\ \hline 
+	path & text & Yes & NULL \\ \\ 
+ \caption{Estructura de la tabla scorms} \label{tab:scorm_scorms-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_scos
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO} \\ \hline 
+	scorm\_id & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del paquete SCORM al cual pertenece el SCO} \\ \hline 
+	parent\_id & int(11)  & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del padre del SCO}\\ \hline 
+	manifest & varchar(255) & Yes & NULL \\ \hline 
+	organization & varchar(255) & Yes & NULL \\ \hline 
+	identifier & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo identifier del elemento item de SCORM} \\ \\  \hline
+	href & varchar(255) & Yes & NULL \\ \hline 
+	title & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título del SCO} \\ \hline 
+	completionThreshold & varchar(3) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al elemento completionThreshold de SCORM} \\ \\  \hline
+	parameters & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo parameters del elemento item de SCORM} \\ \\  \hline
+	isvisible & varchar(5) & Yes & true & \parbox[t]{0.35\textwidth}{Corresponde al atributo isvisible del elemento item de SCORM} \\ \\  \hline
+	attemptAbsoluteDurationLimit & varchar(6) & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al atributo attemptAbsoluteDurationLimit del elemento limitConditions de SCORM} \\ \\  \hline
+	dataFromLMS & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Corresponde al elemento dataFromLMS del elemento item de SCORM} \\ \\  \hline
+	attemptLimit & varchar(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número máximo de intentos para la actividad}\\ \hline 
+	scormType & varchar(6) & Yes & NULL & \parbox[t]{0.35\textwidth}{Tipo del recurso SCORM}\\ \hline \\
+\caption{Estructura de la tabla scos} \label{tab:scorm_scos-structure} \\
+\end{longtable}
+
+%
+% Structure: scorm_sco_presentations
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la presentación de la actividad} \\ \hline 
+	hideKey & varchar(10) & Yes & NULL \\ \hline 
+	sco\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del SCO al cuál está relacionada la presentación de la actividad}\\ \hline \\ 
+ \caption{Estructura de la tabla sco\_presentations} \label{tab:scorm_sco_presentations-structure} \\
+\end{longtable}
+
+
+\subsection{Tablas relacionadas al plugin Wiki}
+%
+% Structure: wiki_entries
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la página del wiki} \\ \\  \hline
+	wiki\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del wiki al cual está asociada la página} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Creador de la página} \\ \\  \hline
+	title & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título de la página} \\ \\  \hline
+	content & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Contenido de la página} \\ \\  \hline
+	revision & int(6) & Yes & 1 & \parbox[t]{0.35\textwidth}{Número de revisión de la página} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación de la página} \\ \\  \hline
+	updated & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de actualización de la página} \\ \\  \hline
+	slug & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Versión para URLs del título de la página} \\ \\
+ \caption[Estructura de la tabla entries]{Estructura de la tabla entries. Almacena las entradas (páginas) del wiki} \label{tab:wiki_entries-structure} \\ 
+\end{longtable}
+
+%
+% Structure: wiki_revisions
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	entry\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador de la página} \\ \\  \hline
+	member\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del miembro que realizó el cambio} \\ \\  \hline
+	title & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Título de la página} \\ \\  \hline
+	content & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Contenido de la revisión} \\ \\  \hline
+	revision & int(6) & Yes & NULL & \parbox[t]{0.35\textwidth}{Número de la revision} \\ \\  \hline
+	created & datetime & Yes & NULL & \parbox[t]{0.35\textwidth}{Fecha de creación de la revision} \\ \\
+ \caption[Estructura de la tabla revisions]{Estructura de la tabla revisions. Almacena las revisiones a las páginas del wiki} \label{tab:wiki_revisions-structure} \\ 
+\end{longtable}
+
+%
+% Structure: wiki_wikis
+%
+\begin{longtable}{c c c c l}
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endfirsthead
+	\multicolumn{1}{c}{\textbf{Field}} &
+	\multicolumn{1}{c}{\textbf{Type}} &
+	\multicolumn{1}{c}{\textbf{Null}} &
+	\multicolumn{1}{c}{\textbf{Default}} &
+	\multicolumn{1}{c}{\textbf{Comments}} \\ \hline \hline
+\endhead \endfoot
+	\textbf{\textit{id}} & int(10) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del wiki}\\ \hline 
+	course\_id & int(11) & Yes & NULL & \parbox[t]{0.35\textwidth}{Identificador del curso al cual está asociado el wiki} \\ \\  \hline
+	name & varchar(255) & Yes & NULL & \parbox[t]{0.35\textwidth}{Nombre del wiki} \\ \\  \hline
+	description & text & Yes & NULL & \parbox[t]{0.35\textwidth}{Descripción del wiki} \\ \\
+ \caption[Estructura de la tabla wikis]{Estructura de la tabla wikis. Listado de wikis registrados} \label{tab:wiki_wikis-structure} \\
+\end{longtable}

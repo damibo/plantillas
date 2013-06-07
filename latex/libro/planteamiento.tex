@@ -1,0 +1,58 @@
+%!TEX root = Libro.tex
+\chapter{Planteamiento del Problema}
+\section{Antecedentes}
+La Web lentamente ha pasado de ser un mero mecanismo de entrega de contenidos, a ser una plataforma de intercambio virtualmente presente en cualquier computador. Esto la ha convertido en la opción clara para la implementación de soluciones vinculadas a la creciente necesidad de emplear nuevas tecnologías como medio de apoyo a la educación tradicional.\\
+
+Sin embargo, la educación a distancia, también llamada \emph{e-learning}, ha evolucionado a un ritmo mucho más lento que otras áreas en la Web, posiblemente por tratar de aplicar a la misma modelos que tradicionalmente han sido válidos para la educación presencial. Los sistemas de educación a distancia, en su mayoría, se encuentran atados a la filosofía lectura/escritura con la cual nació la Internet, haciendo que el intercambio de información sea unidireccional; paradigma que día a día se hace menos atractivo.\\
+
+A esta tendencia se le agrega, como lo indica un estudio hecho en la USB, el desinterés de de los docentes por conocer y aplicar estrategias de educación a distancia. De dicho estudio se concluyó que era necesario \emph{``dar a conocer metodologías y herramientas para la creación de cursos a distancia''}, incluyendo la adopción de estándares que promuevan \emph{``la portabilidad, accesibilidad e interoperabilidad de los recursos educativos [...] trayendo consigo el efecto de mejorar cualquier iniciativa que se desee en la creación de cursos a distancia''} \citep{Diaz2007}\\
+
+Este desinterés es un fenómeno generalizado que afecta a las plataformas educativas, y que se hace mucho más evidente cuando se las  compara con las actuales herramientas masivas de intercambio de información que han emergido de una nueva cultura en la Internet. Para muchas de estas plataformas la solución ha sido agregar nuevas capacidades para mantener la paridad con las nuevas tendencias. Sin embargo, este crecimiento ha generado una desconexión entre las herramientas y los beneficios pedagógicos que persiguen, y más importante aún, han olvidado mantener la motivación del alumno/docente para utilizar la aplicación.
+
+\section{Ósmosis 1.5}
+Para las organizaciones que contemplan al \emph{e-learning} como una parte fundamental de su trabajo, las principales necesidades se encuentran en lograr un proceso sostenido de creación de información, y la evolución de la plataforma ante los requerimientos de sus usuarios. De allí se desprende que las funcionalidades que se requieren para un sistema de este tipo sean la transferencia rápida y efectiva de conocimiento, el enriquecimiento de la información a través de su contexto y la habilidad de fabricar contenidos educativos en menos tiempo y con el menor costo posible \cite{Karrer2007}.\\
+
+Esas mismas necesidades fueron las que llevaron a la Dirección de Servicios Multimedia (DSM) a iniciar la construcción de una plataforma educativa. A continuación se presenta una sinopsis de la evolución que siguió el proyecto hasta llegar a la plataforma con la que cuenta actualmente.\\
+
+Este proyecto tiene su origen en una necesidad personal del jefe de la sección Web de la DSM, Hermes Rodríguez, mientras cursaba la Especialización en Telecomunicaciones: habilitar un espacio para compartir la mayor cantidad de información posible con sus compañeros de clase y docentes. Así surge esta primera plataforma de \emph{e-learning}, un desarrollo sencillo con funcionalidad limitada.\\ 
+
+Posteriormente se utiliza el sistema de manejo de contenidos Claroline para hacer una propuesta formal, sin embargo luego de realizar un estudio pedagógico y tecnológico, se selecciona Dokeos -- un software de código abierto regido por la licencia GPL -- como herramienta para desarrollar la plataforma.\\
+
+El desarrollo de nuevas funcionalidades se basó en los requerimientos específicos de los usuarios. Dichos aditamentos fueron propuestos a los desarrolladores de Dokeos bajo el espíritu de la GNU/GPL. Sin embargo dichos aportes no fueron implementados en la línea principal de desarrollo del paquete de \emph{e-learning}, por lo que la USB terminó, sin querer, con un nuevo producto que lentamente se alejó de la línea de desarrollo principal de Dokeos. Ante esta realidad se decidió bautizar a la nueva herramienta ``Ósmosis'' en referencia a su origen: facilitar la transferencia de conocimiento entre los actores que la utilizan. \\
+
+Desde entonces Ósmosis ha sido promocionada desde de la Universidad Simón Bolívar para convertirla en un producto que permita generar redes de conocimiento a nivel nacional.
+
+\subsection[Aula Virtual (USB)]{Aula Virtual de la Universidad Simón Bolívar}
+La única implantación conocida, en producción, de Ósmosis se encuentra en la Universidad Simón Bolívar y es la plataforma de aprendizaje a distancia, conocida como Aula Virtual, que sirve tanto a los cursos regulares como a los de extensión y a algunos liceos de la zona. En números, a la fecha (29/01/2008) Ósmosis ofrece su servicio a \textbf{22.311 usuarios}, de los cuales \textbf{647 son docentes}. Se manejan \textbf{1.274 cursos} (882 públicos y 392 privados) en \textbf{35 categorías}. El \textbf{curso más antiguo} fue creado el \textbf{13 de Septiembre de 2004} y el mas reciente data del \textbf{29 de Enero de 2008}.\\
+
+La cantidad de usuarios del sistema demuestra que además de los miembros de la comunidad de la Universidad Simón Bolívar también participan otras entidades educativas, por ejemplo, el curso con más estudiantes inscritos (\textbf{594}) es Introducción a la Informática y se dicta en la UNEFA (Universidad Experimental Politécnica de la Fuerza Armada Bolivariana).
+
+\subsubsection{Deficiencias}
+A pesar del éxito que ha tenido la implementación de Ósmosis en las Aulas Virtuales, es importante reconocer que Ósmosis tiene su origen en Dokeos, el cual carecía de una buena documentación y ha heredado código e ideas de distintos Sistemas de Gestión del Aprenizaje (SGA o LMS, por sus siglas en inglés) por lo que actualmente presenta un código fuente difícil de mantener.\\
+
+A nivel técnico, Ósmosis está desarrollado en PHP, sin la utilización de algún \emph{framework}, y carece de una separación clara entre las capas lógica/datos/vista lo cual, en el mejor de los casos, hace que el desarrollo de nuevas funcionalidades o la solución de problemas sea ineficiente.
+
+\section{Ósmosis2}
+Este proyecto, al que se denominará indiscriminadamente Ósmosis2 y Ósmosis2, surge como consecuencia de lo expuesto anteriormente, con la finalidad de contemplar y llevar a cabo el diseño e implementación de una nueva versión de Ósmosis, en la cual sea posible incorporar nuevas tecnologías e integrarlas con los recursos pedagógicos que los docentes demandan, esto con la finalidad de que la plataforma sea empleada como herramienta principal para el aprendizaje.\\
+
+Así mismo, y en función del crecimiento de Ósmosis, uno de los requisitos para esta nueva versión es lograr un código mantenible, lo que implica la menor cohesión posible entre sus capas. Es decir, la reingeniería de la plataforma para adaptarla a las necesidades pedagógicas y tecnológicas actuales.\\
+
+A continuación se presentan los objetivos generales y específicos del proyecto en cuestión:
+
+\subsection{Objetivos Generales}
+\begin{itemize}
+	\item Diseñar y desarrollar un Sistema de Gestión del Aprendizaje fundamentado en corrientes pedagógicas y en los principios de la Web 2.0.
+	\item Desarrollar una plataforma modular de aprendizaje a distancia que se adapte a las necesidades pedagógicas actuales.
+	\item Evaluar las características de la versión actual de Ósmosis.
+\end{itemize}
+	
+\subsection{Objetivos Específicos}
+\begin{itemize}
+	\item Realizar una investigación referente a la definición de LMS y sus características.
+	\item Estudiar los enfoques pedagógicos de mayor uso contemplados en los LMS
+	\item Analizar y comparar los distintos LMS existentes.
+	\item Realizar el levantamiento y análisis de los requerimientos de la plataforma, incluyendo estándares existentes en el diseño de contenidos para la educación.
+	\item Establecer, a partir del análisis de los LMS y los requerimientos detectados, las funcionalidades que contemplará la plataforma de Ósmosis2
+	\item Evaluar y seleccionar una plataforma de desarrollo sobre la cual se desarrollará el LMS (lenguajes, frameworks, manejadores de bases de datos, etc). 
+	\item Diseñar una interfaz gráfica que permita reflejar la nueva visión de Ósmosis
+\end{itemize}

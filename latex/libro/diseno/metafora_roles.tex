@@ -1,0 +1,89 @@
+%!TEX root = ../Libro.tex
+\chapter{Diseño}
+\section{Metáfora del Sistema}
+Siguiendo las indicaciones de la metodología, la metáfora seleccionada para el desarrollo de \textbf{Ósmosis2} es ``el aula de clases tradicional'', en la cual los estudiantes atienden a las clases del profesor. Esto permite que muchas de las herramientas planificadas se integren fácilmente dentro de está metáfora. Por ejemplo las palabras lecciones, foros, conversaciones (chat), encajan sin mucho esfuerzo.
+
+\section{Roles de usuario}
+También, dentro de la metáforas, los actores son obvios: estudiante, profesor, ayudante (asistente) y oyente. Esta jerarquía de ``super-roles'' permite asignar a cada usuario su función específica dentro de un curso (un profesor en el curso A puede ser un estudiante en el curso B). Adicional a estos cuatro roles se define uno adicional, el cual no está superditado a un curso en particular, que es el administrador de la plataforma y tiene acceso privilegiado a todas las funciones del sistema.\\
+
+Sin embargo, por lo extenso del proyecto y para agregar mayor semántica dentro de cada herramienta, se han desarrollado ``sub-roles'' que permiten definir las funciones de cada usuario dentro de la herramienta y definir qué super-roles pueden ser asignados dentro de dichos sub-roles.\\
+
+Para conocer sobre las funcionalidades de cada una de las herramientas mencionadas a continuación consultar el \textbf{Apéndice B}, en el cual se describen las características del sistema en función de las herramientas y recursos que lo conforman.
+
+\subsubsection{Foro}
+\begin{itemize}
+	\item \emph{Moderador}: el moderador de un foro es el encargado de mantener las conversaciones dentro de un ambiente de respeto y cerrar las conversaciones cuando lo considere pertinente.\\
+		\textbf{Super-Roles:} instructor y ayudante.
+	\item \emph{Forista}: es la persona que escribe sus comentarios, sobre un tema específico, en el foro.\\
+		\textbf{Super-Roles:} estudiante. 
+\end{itemize}
+
+\subsubsection{Blog}
+\begin{itemize}
+	\item \emph{Escritor}: el escritor de un blog es aquella persona que plasma ideas o comentarios en él para compartirlos con el resto de la comunidad.\\
+		\textbf{Super-Roles:} instructor, ayudante y estudiante.
+	\item \emph{Lector}: es el lector de los comentarios del blog de otra persona.\\
+		\textbf{Super-Roles:} instructor, ayudante, estudiante y visitante.
+\end{itemize}
+
+\subsubsection{Wiki}
+\begin{itemize}
+	\item \emph{Supervisor}: es el encargado de supervisar la calidad de información colocada en el wiki, que sea adecuada.\\
+		\textbf{Super-Roles:} instructor.
+	\item \emph{Editor}: son aquellas personas que participan en el wiki agregando información relacionada a los temas de los cursos o que considere de interés para otros estudiantes o instructores.\\
+		\textbf{Super-Roles:} ayudante y estudiante.
+	\item \emph{Lector}: es el lector de la información contenida en el wiki. Puede ver el historial o comparar versiones del contenido allí escrito.\\
+		\textbf{Super-Roles:} visitante.
+\end{itemize}
+
+\subsubsection{Chat}
+\begin{itemize}
+	\item \emph{Moderador}: al igual que en el foro, el moderador de un chat es el encargado de mantener las conversaciones dentro de un ambiente de respeto, así mismo puede amonestar a un participante si lo considera necesario.\\
+		\textbf{Super-Roles:}instructor y ayudante.	
+	\item \emph{Participante}: son las personas que participan en conversaciones sobre distintos temas empleando el chat como medio para intercambiar ideas en tiempo real.\\
+		\textbf{Super-Roles:} estudiante.
+\end{itemize}
+
+\subsubsection{Mensajería}
+\begin{itemize}
+	\item \emph{Remitente}: es la persona que envía un mensaje (e-mail) a una o más personas.\\
+		\textbf{Super-Roles:} instructor, ayudante y estudiante.
+	\item \emph{Destinatario}: es la persona que recibe un mensaje. Puede realizar las opciones típicas de un servicio de mensajería (leer el mensaje, eliminarlo, ver la bandeja de entrada, etc.).\\
+		\textbf{Super-Roles:} instructor, ayudante y estudiante.
+\end{itemize}
+
+\subsubsection{Evaluaciones}
+\begin{itemize}
+	\item \emph{Evaluador}: es la persona que crea, aplica y corrige las evaluaciones o actividades asignadas a un grupo de personas.\\
+		\textbf{Super-Roles:} instructor y ayudante.
+	\item \emph{Evaluado}: es la persona que responde una evaluación aplicada por el evaluador.\\
+		\textbf{Super-Roles:} estudiante.
+\end{itemize}
+
+\subsubsection{Agenda}
+\begin{itemize}
+	\item \emph{Planificador}: es la persona que planifica y agrega un nuevo evento a la agenda.\\
+		\textbf{Super-Roles:} instructor y ayudante.
+	\item \emph{Lector}: es la persona que observa los eventos plasmados en la agenda.\\
+		\textbf{Super-Roles:} instructor, ayudante, estudiante y oyente.
+\end{itemize}
+
+\subsubsection{Lecciones}
+\begin{itemize}
+	\item \emph{Tutor}: es la persona que proporciona o dicta la lección\\
+			\textbf{Super-Roles:} instructor y ayudante.
+	\item \emph{Aprendiz}: es aquel que utiliza la información contenida en la lección.\\
+			\textbf{Super-Roles:} estudiante.
+\end{itemize}
+
+\subsubsection{Casillero}
+\begin{itemize}
+	\item \emph{Propietario}: es aquella persona que es dueña del casillero\\ \textbf{Super-Roles:} instructor, ayudante y estudiante.
+	\item \emph{Lectores}: son las personas que pueden visualizar archivos almacenados en los casilleros de otros usuarios\\ \textbf{Super-Roles:} instructor, ayudante, estudiante y oyente.
+\end{itemize}
+
+\subsubsection{Portafolio}
+\begin{itemize}
+	\item \emph{Dueño}: el dueño del portafolio es el único que tiene capacidad de modificarlo y decidir qué usuarios pueden acceder a él.\\
+		\textbf{Super-Roles:} instructor, ayudante y estudiante.
+\end{itemize}

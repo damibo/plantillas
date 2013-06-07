@@ -1,0 +1,38 @@
+%!TEX root = ../Libro.tex
+\section{Requerimientos no-funcionales}
+Las siguientes características y condiciones técnicas que deben cumplirse en Ósmosis2:
+
+\subsection{Capacidad de mantenimiento}
+Esta característica engloba los requerimientos relacionados con la sustentabilidad y capacidad de crecimiento que debe tener el sistema en el tiempo. Ósmosis2 debe cumplir con:
+\begin{enumerate}
+	\item \textbf{Modularidad}\\
+	El código fuente del sistema debe contar con una separación clara de sus capas utilizando la arquitectura MVC, de modo que el crecimiento de la aplicación sea organizado.
+	\item \textbf{Plug-and-play} \\
+	La arquitectura del sistema debe ser de tal manera que cada herramienta se conecte y esté lista para usar. De la misma manera, debe ser igual de fácil desactivar las herramientas.
+	\item \textbf{Documentación clara}\\
+	El sistema debe contar con una documentación del código clara y completa. Adicionalmente, el sistema debe contar con manuales de uso para desarollador y usuario.
+\end{enumerate}
+
+\subsection{Usabilidad y Accesibilidad}
+El sistema debe respetar las pautas definidas por la W3C para la accesibilidad en el desarrollo web así como los principios básicos del diseño universal. Debe contar con una interfaz gráfica intuitiva y fácil de usar compatible con cualquiera de los navegadores web de mayor uso (Firefox 2, Internet Explorer 6, Opera 9, Safari 3 y posteriores).
+
+\subsection{Prestaciones}
+En esta característica se definen las condiciones que deberá soportar la aplicación a nivel de:
+\begin{enumerate}
+	\item \textbf{Escalabilidad} \\
+	Es un aspecto de gran importancia ya que la plataforma debe manejar, desde sus primeras versiones, miles de usuarios, cantidad que se espera aumentará progresivamente con la incorporación de nuevas instituciones educativas a la plataforma. Así mismo debe permitir el crecimiento rápido en los servicios, de modo que se pueda dar respuesta rápida a los nuevos requerimientos que puedan surgir.
+	\item \textbf{Rendimiento} \\
+	El sistema debe ejecutar las operaciones de manera eficiente, para ello debe manejar aspectos como la concurrencia y caching de resultados, de modo que sea posible manejar grandes cantidades de peticiones.
+\end{enumerate}
+
+\subsection{Seguridad}
+\begin{enumerate}
+	\item \textbf{Autenticación} \\
+	El acceso al sistema debe estar restringido por el uso de claves asignadas a cada uno de los usuarios.
+	\item \textbf{Listas de acceso} \\
+	El sistema debe permitir que los usuarios tengan acceso para la modificación de sólo los recursos que su rol les permita. Dicho roles deben definirse en función de cada curso.
+	\item \textbf{Trazabilidad} \\
+	El sistema deberá contar con mecanismos que permitan el registro de las actividades realizadas por cada usuario.
+	\item \textbf{Confidencialidad} \\
+	El sistema debe permitir que cada usuario determine qué información desea revelar dentro de la aplicación.
+\end{enumerate}

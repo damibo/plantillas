@@ -1,0 +1,238 @@
+%!TEX root = ../Libro.tex
+\section{Historias de Usuario}
+A continuación se presentan, organizadas por herramienta, las historias de usuario según redactadas según las recomendaciones de la metodología XP.
+
+\subsubsection{Manejo de Usuarios}
+\begin{itemize}
+	\item \textbf{Registrar usuario individuales y por lotes}\\
+	El administrador tiene la opción de registrar a los usuarios del sistema de forma individual o por grupos (registrar a todos los estudiantes del curso). De igual manera, cada estudiante puede registrarse por su cuenta y de forma individual.
+	\item \textbf{Iniciar sesión}\\
+	El usuario ya registrado, introduce el login y el password para tener acceso al sistema y sus funcionalidades.
+	\item \textbf{Cerrar sesión}\\
+	El usuario cierra la sesión a través de la cual ha estado trabajando y abandona el sistema.
+	\item \textbf{Manejo de permisos}\\
+	El sistema debe permitir asignar roles a los usuarios con respecto a toda la plataforma (administrador,miembro,visitante) y dentro de cada curso (profesor, estudiante,asistente).
+	\item \textbf{Eliminar usuario}\\
+	Se pueden eliminar los usuarios del sistema de forma individual o por grupos de modo que sus datos no sean válidos para acceder al sistema, sin embargo debe ser posible conservar toda la información generada por este. Esta eliminación debe poder realizarse en lotes.
+\end{itemize}
+
+\subsubsection{Foros}
+\begin{itemize}
+	\item \textbf{Crear tema}\\
+	Los profesores del curso tienen la potestad de crear temas para delimitar las discusiones del foro.
+	\item \textbf{Iniciar discusión}\\
+	Cualquier miembro del curso puede iniciar una discusión dentro de cualquiera de los temas existentes del foro.
+	\item \textbf{Responder hilo de discusión}\\
+	Los usuarios pueden responder en las discusiones iniciadas en el foro.
+	\item \textbf{Editar mensaje}\\
+	Cualquier mensaje en los hilos de discusión deben ser modificables por sus respectivos dueños.
+	\item \textbf{Puntuar un comentario}\\
+	Los usuarios del foro, podrán asignar una evaluación de la calidad de los mensajes de sus compañeros.
+	\item \textbf{Programar fecha de cierre}\\
+	El sistema permite cerrar un tema o una discusión de modo que ningún participante pueda agregar nuevos mensajes. Este cierre puede ser programado de modo que se ejecute automáticamente llegada la fecha.
+\end{itemize}
+
+\subsubsection{Intercambio de Archivos}
+\begin{itemize}
+	\item \textbf{Subir archivo}\\
+	El sistema debe permitir a los usuarios subir archivos al sistema, estos archivos serán de acceso público.
+	\item \textbf{Modificar datos del archivo}\\
+	Los usuarios pueden modificar los datos (título o descripción) del archivo que subió al sistema.
+	\item \textbf{Ordenar casillero}\\
+	El usuario del casillero debe poder organizar sus archivos como lo desee, creando carpetas y moviendo archivos de lugar.
+	\item \textbf{Acceso al casillero}\\
+	Todo casillero será accesible públicamente y existirá una carpeta especial para hacer entregas en la que todo usuario podrá dejar archivos que sólo el dueño del casillero podrá ver.
+	\item \textbf{Manejar versiones para archivos}\\
+	El sistema permite manejar la actualización de versiones de los archivos subidos. Esto facilita el control de los posibles cambios que pueda sufrir un archivo.
+	\item \textbf{Detección de virus}\\
+	El sistema debe suministrar un antivirus que verifique que los archivos a subir o descargar no posean virus que puedan afectar a los usuarios.
+\end{itemize}
+
+\subsubsection{Mensajería Interna}
+\begin{itemize}
+	\item \textbf{Enviar mensaje}\\
+	Los usuarios pueden enviar mensajes a otros usuarios del sistema. Los mensajes pueden ser leídos dentro del sistema o pueden ser redirigidos al correo electrónico del usuario.
+	\item \textbf{Leer mensaje}\\
+	El sistema permitirá a los usuarios leer los mensajes que ha recibido
+ 	\item \textbf{Manejar libreta de direcciones}
+	\begin{itemize}
+		\item \textbf{Agregar contactos}\\
+		Los usuarios poseen una ``libreta'' en la cual pueden almacenar los datos de contacto de otros usuarios del sistema. El sistema permite agregar nuevos contactos con la información de cada uno de ellos.
+		\item \textbf{Buscar contacto}\\
+		El usuario que posee contactos en su libreta puede realizar una búsqueda de los datos de una persona en particular, ingresando el nombre del contacto a buscar o cualquier otra información relevante.
+		\item \textbf{Eliminar contacto}\\
+		El usuario que posee una libreta de contactos puede eliminar un contacto y toda la información del mismo.
+		\item \textbf{Editar información de contacto}\\
+		El usuario puede agregar datos adicionales sobre sus contactos.
+		\item \textbf{Exportar contactos}\\
+		El sistema permite que los usuarios exporten su lista de contactos a otros formatos digitales que faciliten la impresión o manejo de los mismos fuera del sistema.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Blog}
+\begin{itemize}
+	\item \textbf{Entradas}\\
+	El escritor del blog debe se capaz de escribir y modificar las entradas de su blog.
+	\item \textbf{Eliminar entrada}\\
+	El escritor del blog puede, en cualquier momento, eliminar una entrada de su blog.
+	\item \textbf{Listar entradas}\\
+	Se pueden visualizar las entradas registradas en el blog. La cantidad de información mostrada dependerá de las configuraciones seleccionadas por el dueño del blog.
+	\item \textbf{Agregar comentario}\\
+	Dependiendo de las configuraciones definidas por el escritor del blog, los lectores podrán dejar comentarios en las entradas publicadas.
+	\item \textbf{Enviar trackback/pingback}\\
+	El sistema de blogs debería permitir manejar trackbacks y pingbacks para permitir la comunicación con otros blogs dentro y fuera del sistema.
+	\item \textbf{Recibir trackback/pingback}\\
+	Al recibir una petición de trackback o pingbak se debe registrar un comentario en la entrada correspondiente que exprese que ha sido realizada esta acción
+	\item \textbf{Importar blog externo}\\
+	El usuario registrado, escritor de un blog externo, tiene la capacidad de indicarle al sistema donde se aloja dicho blog de manera que tome de ahí las nuevas entradas. 
+\end{itemize}
+
+\subsubsection{Wiki}
+\begin{itemize}
+	\item \textbf{Crear página}\\
+	Los miembros del curso pueden crear y modificar páginas en el wiki.
+	\item \textbf{Historia de Modificaciones}\\
+	El sistema debe llevar un registro de los cambios que se realizan en cada página de cada wiki. 
+	\item \textbf{Restaurar página}\\
+	En cualquier momento el usuario podrá restaurar una página del wiki a una versión anterior.
+	\item \textbf{Comparar versiones de páginas}\\
+	El usuario podrá comparar distintas versiones de una página para detectar los cambios realizados. Debe ser posible saber el autor de los cambios.
+	\item \textbf{Manejo de borradores}\\
+	El usuario tendrá la posibilidad de almacenar borradores de las páginas que está modificando.
+	\item \textbf{Manejo de discusiones}\\
+	Cada página debe permitir una sección para que los usuarios discutan los contenidos de dicha página.
+\end{itemize}
+
+\subsubsection{Chat}
+\begin{itemize}
+	\item \textbf{Ver historial de conversaciones}\\
+	El sistema debe permitir al moderador del curso ver los registros (historial) de las conversaciones.
+	\item \textbf{Expulsar usuario}\\
+	El moderador de la sala de chat puede expulsar a un participante de manera temporal o permanente.
+	\item \textbf{Registrar pregunta desde el chat}\\
+	Los participantes tienen la posibilidad de copiar preguntas hechas en el chat (con sus respuestas) a una sección permanente de preguntas importantes.
+\end{itemize}
+
+\subsubsection{Pizarra}
+El instructor o el ayudante pueden configurar una sesión de trabajo en la ``pizarra''. En ella podrá mostrar material multimedia (PDF, presentaciones, dibujos y videos) o escrita (chat y pizarra).
+
+\subsubsection{Lecciones}
+\begin{itemize}
+	\item \textbf{Crear lección}\\
+	El profesor del curso puede subir al curso una lección en formato SCORM.
+ 	\item \textbf{Ver lección}
+	El sistema debe proveer un visor de lecciones SCORM de modo que los miembros del curso puedan revisarla en línea.
+\end{itemize}
+
+\subsubsection{Enlaces}
+\begin{itemize}
+	\item \textbf{Agregar enlace}\\
+	Cada curso debe tener una sección de enlaces a recursos de interés. Cada miembro que lo desee podrá agregar recursos por esta vía.
+	\item \textbf{Modificar enlace}\\
+	Cada miembro podrá modificar o eliminar los enlaces que haya agregado.
+\end{itemize}
+
+\subsubsection{Calendario/Agenda}
+Los miembros del curso podrán registrar, modificar y eliminar eventos de la agenda. Dichos eventos serán visibles por el curso.\\
+
+\subsubsection{Trabajo desconectado}
+\begin{itemize}
+	\item \textbf{Agregar Podcast/Screencast}\\
+	El blog debe soportar podcasting y screencasting.
+	\item \textbf{Descargar contenidos del curso}\\
+	El usuario puede descargar el material del curso para usarlo posteriormente sin necesidad de estar conectado con el sistema.
+\end{itemize}
+
+\subsubsection{Agregador de Noticias}
+Cada curso podrá agregar de manera automática noticias generadas en otras páginas.
+
+\subsubsection{Grupos de Trabajo}
+\begin{itemize}
+	\item \textbf{Crear grupo}\\
+	El profesor o ayudante puede crear grupos de trabajo con los estudiantes del curso.
+	\item \textbf{Modificar grupo}\\
+	El profesor o ayudante de un curso podrá modificar cualquier grupo de trabajo para agregar o eliminar un miembro del grupo.
+	\item \textbf{Eliminar grupo}\\
+	El profesor o ayudante podrá eliminar un grupo una vez finalizada la actividad para la cual fue creado.
+\end{itemize}
+
+\subsubsection{Comunidad}
+\begin{itemize}
+	\item \textbf{Listar cursos}\\
+	El sistema debe exponer a la comunidad todos los cursos disponibles en la plataforma.
+	\item \textbf{Listar entradas de blogs}\\
+	El sistema debe exponer las entradas de los blogs.
+	\item \textbf{Notificaciones Globales}\\
+	El sistema debe permitir a los administradores colocar notificaciones globales para todos los usuarios.
+	\item \textbf{Mostrar noticias externas}\\
+	El sistema debe permitir a los administradores seleccionar una o más fuentes de noticias que se mostrarán como notificaciones globales.
+\end{itemize}
+
+\subsubsection{Portafolios}
+\begin{itemize}
+	\item \textbf{Crear perfil}\\
+	El usuario registrado (instructor, ayudante o estudiante) puede crear un perfil con sus datos personales e información correspondiente a los estudios cursados, entre otros. Podrá crear un currículo virtual del cual será dueño. 
+	\item \textbf{Configurar perfil}\\
+	El dueño del portafolio podrá editar la información suministrada al crear su perfil inicial para modificar o eliminar datos.
+	\item \textbf{Ver perfil}\\
+	Los usuarios registrados y los visitantes pueden visualizar los datos del perfil de otro usuario o de ellos mismos. La cantidad de información suministrada dependerá del nivel de permisos que tenga el usuario que visualiza el perfil.
+	\item \textbf{Configurar portafolios}\\
+	El dueño del portafolios podrá seleccionar los elementos que desea mostrar públicamente, el portafolio completo estará disponible para que lo envíe personalmente a quienes desee mostrar la información completa.
+	\item \textbf{Editar portafolios}\\
+	El dueño del portafolio puede agregar información nueva, así como eliminar o modificar la información existente.  
+	\item \textbf{Exportar portafolios}\\
+	El dueño del portafolio podrá exportar su perfil personal con el estilo de un currículo, indicando la información que desea mostrar y cómo desea presentarla.
+\end{itemize}
+
+\subsubsection{Pruebas en línea}
+\begin{itemize}
+	\item \textbf{Crear preguntas}\\
+	El instructor o el ayudante pueden elaborar preguntas que, posteriormente, les permitan crear una prueba o utilizarlas en otra actividad 
+	\item \textbf{Modificar preguntas}\\
+	El instructor o el ayudante pueden editar las preguntas creadas para cambiar su contenido o adaptarla a algún tipo de actividad. Debe tenerse en cuenta que dichas preguntas pueden haber sido usadas en otras pruebas.
+	\item \textbf{Crear pruebas}\\
+	El instructor o el ayudante pueden elaborar pruebas para evaluar el contenido de la materia del curso. Estas pruebas tendrán asociadas una puntaje.
+	\item \textbf{Modificar pruebas}\\
+	El instructor o el ayudante pueden modificar las pruebas creadas. Se podrá agregar una pregunta, eliminarla o cambiar su puntaje.
+	\item \textbf{Guardar pruebas}\\
+	El instructor o el ayudante pueden guardar las pruebas elaboradas para reutilizarlas en futuros cursos.
+	\item \textbf{Evaluar pruebas}\\
+	El instructor o el ayudante pueden corregir las preguntas de las pruebas aplicadas a los estudiantes y asignarles el puntaje obtenido. Posteriormente este puntaje se vera reflejado en el acta de calificaciones. 
+\end{itemize}
+
+\subsubsection{Actividades Evaluadas}
+El profesor o ayudante podrá asignar una actividad, con una puntuación definida, a los estudiantes.
+
+\subsubsection{Control de calificaciones}
+\begin{itemize}
+	\item \textbf{Crear tabla de control de evaluación}\\
+	El instructor podrá crear una tabla de calificaciones en la cual se plasmara las notas obtenidas por los estudiantes tanto en las actividades evaluadas como en las pruebas, luego se podrá totalizar el puntaje para cada estudiante del curso. 
+	\item \textbf{Modificar tabla de control de evaluación}\\
+	El instructor podrá editar la tabla de calificaciones para agregar nuevas actividades o pruebas a evaluar, para cambiar el puntaje de las ya existentes o para eliminarlas. 
+	\item \textbf{Exportar tabla de calificaciones}\\
+	El sistema permitirá al instructor generar un acta de las calificaciones del curso con las actividades realizadas y el puntaje obtenido por los estudiantes en cada una de ellas.
+\end{itemize}
+
+\subsubsection{Manejo del Curso}
+\begin{itemize}
+	\item \textbf{Crear curso}\\
+	El instructor podrá crear un curso que corresponderá a la materia a dictar. Podrá dar la descripción del mismo, los horarios, etc. y agregar a los estudiantes que lo tomarán. Adicionalmente podrá agregar a la plantilla del curso aquellas herramientas, disponibles en el sistema, que se consideren adecuadas para lograr los objetivos del mismo.
+	\item \textbf{Programar aparición de recursos}\\
+	EL sistema debe permitir a los profesores definir las fechas en las que algún contenido estará disponible para que los estudiantes lo utilicen.
+	\item \textbf{Guardar estructura de un curso}\\
+	El sistema debe permitir que la estructura de un curso pueda ser guardada para ser utilizada como plantilla de otro curso.
+\end{itemize}
+
+\subsubsection{Seguimiento de usuarios}
+\begin{itemize}
+	\item \textbf{Listar usuarios en línea}\\
+	Los miembros podrán en cualquier momento conocer qué compañeros se encuentran usando la plataforma.
+	\item \textbf{Ver historial de navegación}
+	El profesor tendrá una sección en la que podrá observar el uso que le dan los estudiantes al plataforma, de modo que pueda detectar a los estudiantes poco participativos o con problemas.
+\end{itemize}
+
+\subsubsection{Manejo de estadísticas}
+El sistema debe extraer, a partir de los datos recabados en el seguimiento de los usuarios, datos de interés estadístico sobre el uso de los recursos y herramientas. Estos datos deben ser visibles para profesores y administradores.
+
+\subsubsection{Learning Objects}
+La plataforma debe permitir a los usuarios generar Learning Objects a partir de los recursos disponibles.

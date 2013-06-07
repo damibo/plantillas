@@ -1,0 +1,76 @@
+%!TEX root = ../Libro.tex
+\chapter{Marco Tecnológico}
+Este capítulo tiene como principal finalidad presentar las opciones que fueron consideradas para el entorno (lenguaje-framework) que se utilizaría para el desarrollo de Ósmosis2; comparando dichas opciones en diferentes aspectos.
+Posteriormente se presenta la opción seleccionada y se justifica dicha selección en función de los requerimientos específicos de la aplicación y de otras variables importantes.
+
+\section{Entorno de desarrollo}
+Para el desarrollo de Ósmosis2 se buscó un entorno que permitiese solucionar uno de los problemas presentes en la plataforma actual: propiciar la escalabilidad sin sacrificar la facilidad y la velocidad de desarrollo.\\
+
+Para asegurar la escalabilidad era necesario considerar lenguajes de programación que hubiesen demostrado con anterioridad su confiabilidad. Para cumplir con el requerimiento de facilidad en el desarrollo es necesario seleccionar algún framework que ofrezca al desarrollador un entorno en el que hayan elementos pre-construidos de manera que sólo deba ensamblar, de manera ordenada y estructurada, las partes para lograr la tarea que desea.\\
+
+Bajo estos requisitos iniciales, la decisión debía ser un balance entre estabilidad del lenguaje (en su historia y a futuro) y la facilidad que ofrece el framework estudiado. La selección inicial de lenguajes se basó en el nivel de conocimientos de los desarrolladores, por ello se consideraron \textbf{JSP} por su robustez, \textbf{PHP} por su larga historia soportando exitosamente a muchas aplicaciones web y \textbf{Ruby} por el reciente éxito (publicitario) que ha tenido.\\ 
+
+Una vez seleccionados los lenguajes, se consideró un solo framework para cada uno:
+\begin{itemize}
+\item \textbf{JSP}: Struts
+\item \textbf{Ruby}: Rails
+\item \textbf{PHP}: CakePHP
+\end{itemize}
+
+\subsection{JSP/Struts}
+Struts es un framework de código abierto para la construcción de aplicaciones web basadas en Servlets/JSP bajo el paradigma MVC. Su principal característica es que su implementación de MVC tiene como punto medio al controlador que es el que conecta al modelo con la vista. Sin embargo, Struts no ofrece una capa de acceso a datos sino que recomienda algunas como Hibernate, EJB, Cayenne, etc. Situaciones parecidas se presentan en las capas de vista y de lógica del negocio (incluso la validación de datos), en las cuales se deben conectar otros frameworks especializados \citep{Struts_2008}. \\
+
+En este sentido Struts es altamente flexible, pero dicha flexibilidad suele generar confusión entre los desarrolladores. Uno de los principales problemas que presenta Struts es que frena la velocidad de desarrollo al requerir archivos de configuración en formato XML que debe ser modificado cada vez que se desea implementar una nueva funcionalidad. Muchos defensores de Struts apelan a que dichas configuraciones no son necesario tocarlas si se hace uso de las herramientas automatizadas que ofrecen los IDEs (Integrated Development Enviroment). Sin embargo bajo los requerimientos de Ósmosis, esto se traduce en otra razón en contra. \\
+
+El gran elemento a favor de Struts es la robustez que ofrece un lenguaje orientado a objetos y las muchas librerías existentes que se pueden usar. Sin embargo, en este proyecto tan importante como la reutilización de librerías, es la facilidad y rapidez en el desarrollo de nuevas funcionalidades.
+
+\subsection{Ruby/Rails}
+Rails es un framework MVC completo para el desarrollo de aplicaciones web sobre bases de datos. Por completo se entiende que es un framework que ofrece las funcionalidades necesarias para manejar todos los niveles de una aplicación: acceso a datos, validación y reglas del negocio, etc.\\
+
+Rails favorece la convención sobre la configuración, lo cual disminuye la cantidad de detalles que son necesarios recordar en comparación con Struts. Adicionalmente ofrece al desarrollador herramientas para minimizar la cantidad de código necesario, potenciando la reutilización de código. Rails al ser completo, ofrece soporte para validación y abstracción de la base de datos. \\
+
+El rendimiento es uno de los principales problemas de Rails, un ejemplo de este tipo de problemas se presentó con el servicio web Twitter en el cual millones de usuario envían mensajes constantemente lo cual significó constantes caídas del servicio.
+
+\subsection{PHP/CakePHP}
+PHP es el lenguaje de mayor uso y presencia en la web, en la actualidad. Es un lenguaje interpretado que, al igual que Ruby, no es fuertemente tipado.\\
+
+PHP tiene una larga trayectoria en el desarrollo web, con corporaciones como Yahoo! usándolo para potenciar sus sitios. Tal vez unos de los más grandes problemas que han sido destacados por los detractores de PHP son las vulnerabilidades detectadas en muchas aplicaciones como resultado de malas prácticas potenciadas por el lenguaje, sin embargo frameworks de desarrollo como Cake se han encargan de cerrar dichos agujeros.\\
+
+CakePHP es un framework que toma muchos de los conceptos útiles de Rails. Es también un framework completo que ofrece código útil para el desarrollo de las interfaces hasta la abstracción del acceso a la base de datos y, como Rails, se basa en la convención sobre la configuración.\\
+
+Según \citeauthor{Heinemeier_2008}, una de las ventajas de CakePHP sobre Rails es el lenguaje sobre el cual se contruye: para PHP está probado que escala bien. Sin embargo, su queja contra PHP se reduce a lo desordenado que puede llegara a ser el código de este lenguaje. \citep{Heinemeier_2008}. Pero, por otra parte, este es uno de los problemas que CakePHP viene a solucionar.
+
+\subsection{Sinopsis y selección}
+El cuadro \ref{tab:evaluacion_entorno} resume los puntos destacados anteriormente junto con otros aspectos considerados para la decisión. \\
+
+\begin{table}[h]
+\centering  
+\begin{tabular}{lccc} \hline
+	\multicolumn{1}{c}{\multirow{2}{*}{\textbf{Criterios}}} & \multicolumn{3}{c}{\textbf{Entornos de desarrollo}} \\ \cline{2-4}
+	\multicolumn{1}{c}{} & \textbf{JSP/Struts} & \textbf{Ruby/Rails} & \multicolumn{1}{c}{\textbf{PHP/CakePHP}} \\ \hline \hline \\[-0.3cm]
+	
+	\textbf{Validación de datos}		& X & X & X \\[0.3cm]
+	\textbf{Framework completo}			& - & X & X \\[0.3cm]
+	\textbf{Agilidad de desarrollo}		& - & X & X \\[0.3cm]
+	\textbf{Soporte de la comunidad}	& X & X & X \\[0.3cm]
+	\textbf{Documentación}				& X & X & - \\[0.3cm]
+	
+	\multicolumn{4}{>{\columncolor[rgb]{0.9,0.9,0.9}}c}{\textbf{Requerimientos no funcionales}} \\ \\[-0.3cm]
+	\textbf{Módulos Plug-and-Play}						& - & X & X \\[0.3cm]
+	\textbf{Encriptación y Autenticación automatizada}	& - & X & X \\[0.3cm]
+	\textbf{Listas de acceso}							& - & X & X \\[0.3cm]
+	\textbf{Escalabilidad y Rendimiento}				& X & - & X \\[0.3cm]
+	
+	\multicolumn{4}{>{\columncolor[rgb]{0.9,0.9,0.9}}c}{\textbf{Otros aspectos}} \\ \\[-0.3cm]
+	\textbf{Dominio del lenguaje y framework}	& X & - & X \\[0.3cm] \hline
+	
+	\multicolumn{1}{>{\columncolor[rgb]{0.9,0.9,0.9}}l}{\textbf{Total}} &
+		\multicolumn{1}{>{\columncolor[rgb]{0.9,0.9,0.9}}c}{\texttt{\textbf{5/10}}} &
+		\multicolumn{1}{>{\columncolor[rgb]{0.9,0.9,0.9}}c}{\texttt{\textbf{8/10}}} &
+		\multicolumn{1}{>{\columncolor[rgb]{0.5,0.9,0.5}}c}{\texttt{\textbf{9/10}}} \\ \\[-0.3cm]
+		
+\end{tabular}
+
+\caption[Comparativa de los entornos de desarrollo considerados]{Comparativa de los entornos de desarrollo considerados. Se consideran aspectos relacionados con la facilidad de uso, requerimientos no funcionales y familiaridad de los desarrolladores con el mismo, quedando seleccionado \textbf{CakePHP}} \label{tab:evaluacion_entorno}
+
+\end{table}
